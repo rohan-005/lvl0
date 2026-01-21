@@ -1,0 +1,89 @@
+:root {
+  --neon: #00ff77;
+  --neon-soft: #8affc1;
+  --bg-dark: #050505;
+  --card-bg: rgba(10, 10, 10, 0.95);
+  --border: rgba(255, 255, 255, 0.12);
+  --text-dim: #bcbcbc;
+}
+
+.auth-root {
+  min-height: 100vh;
+  background: radial-gradient(circle at bottom right, #013101b4, #050505);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: white;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 36px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+}
+
+.auth-logo {
+  font-family: "Orbitron", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--neon);
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.auth-sub {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  margin-bottom: 28px;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-card input,
+.auth-card select {
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 12px 14px;
+  border-radius: 10px;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.auth-card input:focus,
+.auth-card select:focus {
+  outline: none;
+  border-color: var(--neon);
+}
+
+.auth-btn {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--neon), var(--neon-soft));
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-link {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.auth-link a {
+  color: var(--neon);
+  text-decoration: underline;
+}

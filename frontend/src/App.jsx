@@ -1,21 +1,41 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+
+import { AuthProvider } from "./context/AuthContext";
 
 import Landing from "./pages/Landing";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import OTPVerification from "./pages/auth/OTPVerification";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+
+import "./App.css";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Landing />}></Route>
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: "#0a0a0a",
+              color: "#00ff77",
+              border: "1px solid #00ff77",
+            },
+          }}
+        />
+
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/verify-email" element={<OTPVerification />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
