@@ -4,6 +4,9 @@ import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+// ✅ import LoadingButton
+import LoadingButton from "../../ui_components/LoadingButton";
+
 export default function Register() {
   const [formData, setFormData] = useState({
     name: "",
@@ -22,21 +25,24 @@ export default function Register() {
 
   const submit = async (e) => {
     e.preventDefault();
+
     if (formData.password !== formData.confirmPassword)
       return toast.error("Password mismatch");
 
     setLoading(true);
+
     const res = await register(
       formData.name,
       formData.email,
       formData.password,
       formData.accountType
     );
+
     setLoading(false);
 
     if (!res.success) return toast.error(res.message);
-    toast.success("Verify your email");
 
+    toast.success("Verify your email");
     navigate("/verify-email", { state: { email: formData.email } });
   };
 
@@ -47,30 +53,78 @@ export default function Register() {
         <div className="auth-sub">Create your identity</div>
 
         <form onSubmit={submit}>
-          <input name="name" placeholder="Username" onChange={handleChange} />
-          <input name="email" placeholder="Email" onChange={handleChange} />
+          <input
+            name="name"
+            placeholder="Username"
+            onChange={handleChange}
+            required
+          />
 
-          <select name="accountType" onChange={handleChange}>
-            <option value="gamer">🎮 Gamer</option>
-            <option value="developer">💻 Developer</option>
-          </select>
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            onChange={handleChange}
+            required
+          />
+
+          {/* ACCOUNT TYPE RADIO */}
+          <div className="radio-group">
+            <label
+              className={`radio-card ${
+                formData.accountType === "gamer" ? "active" : ""
+              }`}
+            >
+              <input
+                type="radio"
+                name="accountType"
+                value="gamer"
+                checked={formData.accountType === "gamer"}
+                onChange={handleChange}
+              />
+              <span>🎮 Gamer</span>
+            </label>
+
+            <label
+              className={`radio-card ${
+                formData.accountType === "developer" ? "active" : ""
+              }`}
+            >
+              <input
+                type="radio"
+                name="accountType"
+                value="developer"
+                checked={formData.accountType === "developer"}
+                onChange={handleChange}
+              />
+              <span>💻 Developer</span>
+            </label>
+          </div>
 
           <input
             type="password"
             name="password"
             placeholder="Password"
             onChange={handleChange}
+            required
           />
+
           <input
             type="password"
             name="confirmPassword"
             placeholder="Confirm Password"
             onChange={handleChange}
+            required
           />
 
-          <button className="auth-btn" disabled={loading}>
-            {loading ? "Creating..." : "Register"}
-          </button>
+          {/* ✅ LoadingButton instead of button */}
+          <LoadingButton
+            type="submit"
+            loading={loading}
+            variant="primary"
+          >
+            Register
+          </LoadingButton>
         </form>
 
         <div className="auth-link">

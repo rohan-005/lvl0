@@ -66,8 +66,14 @@ userSchema.methods.matchPassword = function (password) {
 /* Email OTP */
 userSchema.methods.generateEmailVerificationOTP = function () {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  this.emailVerificationOTP = crypto.createHash("sha256").update(otp).digest("hex");
+
+  this.emailVerificationOTP = crypto
+    .createHash("sha256")
+    .update(otp)
+    .digest("hex");
+
   this.emailVerificationOTPExpire = Date.now() + 10 * 60 * 1000;
+
   return otp;
 };
 

@@ -11,6 +11,7 @@ import OTPVerification from "./pages/auth/OTPVerification";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 
 import "./App.css";
+import Home from "./pages/home/Home";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<OTPVerification />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/home" element={<Home />} />
         </Routes>
       </Router>
     </AuthProvider>

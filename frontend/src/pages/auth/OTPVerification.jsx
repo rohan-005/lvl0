@@ -4,8 +4,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../../utils/axiosConfig";
 
+import LoadingButton from "../../ui_components/LoadingButton";
+
 export default function OTPVerification() {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState(Array(6).fill(""));
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
@@ -13,7 +15,7 @@ export default function OTPVerification() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const inputs = useRef([]);
+  const inputsRef = useRef([]);
 
   /* =========================
      INIT EMAIL
@@ -23,7 +25,10 @@ export default function OTPVerification() {
       location.state?.email ||
       localStorage.getItem("pendingVerificationEmail");
 
-    if (!mail) return navigate("/register");
+    if (!mail) {
+      navigate("/register");
+      return;
+    }
 
     setEmail(mail);
     localStorage.setItem("pendingVerificationEmail", mail);
@@ -34,26 +39,74 @@ export default function OTPVerification() {
      ========================= */
   useEffect(() => {
     if (!countdown) return;
-    const t = setTimeout(() => setCountdown(countdown - 1), 1000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(timer);
   }, [countdown]);
 
   /* =========================
-     INPUT HANDLERS
+     OTP INPUT HANDLING
      ========================= */
-  const handleChange = (val, i) => {
-    if (!/^\d?$/.test(val)) return;
+  const handleChange = (value, index) => {
+    if (!/^\d?$/.test(value)) return;
 
-    const copy = [...otp];
-    copy[i] = val;
-    setOtp(copy);
+    const updated = [...otp];
+    updated[index] = value;
+    setOtp(updated);
 
-    if (val && i < 5) inputs.current[i + 1].focus();
+    if (value && index < 5) {
+      inputsRef.current[index + 1]?.focus();
+    }
   };
 
-  const verifyOTP = async () => {
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace") {
+      if (otp[index]) {
+        const updated = [...otp];
+        updated[index] = "";
+        setOtp(updated);
+      } else if (index > 0) {
+        inputsRef.current[index - 1]?.focus();
+        const updated = [...otp];
+        updated[index - 1] = "";
+        setOtp(updated);
+      }
+    }
+
+    if (e.key === "Delete") {
+      const updated = [...otp];
+      updated[index] = "";
+      setOtp(updated);
+    }
+
+    if (e.key === "ArrowLeft" && index > 0) {
+      inputsRef.current[index - 1]?.focus();
+    }
+
+    if (e.key === "ArrowRight" && index < 5) {
+      inputsRef.current[index + 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e) => {
+    const pasted = e.clipboardData.getData("text").trim();
+    if (!/^\d{6}$/.test(pasted)) return;
+
+    setOtp(pasted.split(""));
+    inputsRef.current[5]?.focus();
+    e.preventDefault();
+  };
+
+  /* =========================
+     VERIFY OTP (FIXED)
+     ========================= */
+  const verifyOTP = async (e) => {
+    e.preventDefault();
+
     const code = otp.join("");
-    if (code.length !== 6) return;
+    if (code.length !== 6) {
+      toast.error("Enter full OTP");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -63,13 +116,16 @@ export default function OTPVerification() {
       navigate("/login");
     } catch (err) {
       toast.error(err.response?.data?.message || "Invalid OTP");
-      setOtp(["", "", "", "", "", ""]);
-      inputs.current[0].focus();
+      setOtp(Array(6).fill(""));
+      inputsRef.current[0]?.focus();
     } finally {
       setLoading(false);
     }
   };
 
+  /* =========================
+     RESEND OTP
+     ========================= */
   const resendOTP = async () => {
     setResendLoading(true);
     try {
@@ -77,18 +133,11 @@ export default function OTPVerification() {
       toast.success("OTP resent");
       setCountdown(60);
     } catch {
-      toast.error("Could not resend OTP");
+      toast.error("Failed to resend OTP");
     } finally {
       setResendLoading(false);
     }
   };
-
-  /* =========================
-     AUTO VERIFY
-     ========================= */
-  useEffect(() => {
-    if (otp.every((d) => d !== "")) verifyOTP();
-  }, [otp]);
 
   return (
     <div className="auth-root">
@@ -96,41 +145,46 @@ export default function OTPVerification() {
         <div className="auth-logo">lvl_0</div>
         <div className="auth-sub">Verify your email</div>
 
-        <p className="auth-sub" style={{ fontSize: "0.75rem" }}>
+        <p className="auth-sub otp-email">
           Code sent to <b>{email}</b>
         </p>
 
-        <div style={{ display: "flex", gap: "8px", margin: "24px 0" }}>
-          {otp.map((d, i) => (
-            <input
-              key={i}
-              ref={(el) => (inputs.current[i] = el)}
-              value={d}
-              maxLength={1}
-              onChange={(e) => handleChange(e.target.value, i)}
-              style={{
-                flex: 1,
-                textAlign: "center",
-                fontSize: "1.2rem",
-                padding: "12px",
-              }}
-            />
-          ))}
-        </div>
+        {/* ✅ FORM FIX */}
+        <form onSubmit={verifyOTP}>
+          <div className="otp-group" onPaste={handlePaste}>
+            {otp.map((digit, index) => (
+              <input
+                key={index}
+                ref={(el) => (inputsRef.current[index] = el)}
+                value={digit}
+                maxLength={1}
+                className="otp-input"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                onChange={(e) =>
+                  handleChange(e.target.value, index)
+                }
+                onKeyDown={(e) =>
+                  handleKeyDown(e, index)
+                }
+              />
+            ))}
+          </div>
 
-        <button
-          className="auth-btn"
-          disabled={loading}
-          onClick={verifyOTP}
-        >
-          {loading ? "Verifying..." : "Verify"}
-        </button>
+          <LoadingButton
+            loading={loading}
+            variant="primary"
+            type="submit"
+          >
+            Verify
+          </LoadingButton>
+        </form>
 
         <div className="auth-link">
           <button
+            type="button"
             onClick={resendOTP}
             disabled={resendLoading || countdown}
-            style={{ background: "none", border: "none", color: "#00ff77" }}
           >
             {countdown ? `Resend in ${countdown}s` : "Resend OTP"}
           </button>
@@ -138,8 +192,8 @@ export default function OTPVerification() {
 
         <div className="auth-link">
           <button
+            type="button"
             onClick={() => navigate("/register")}
-            style={{ background: "none", border: "none", color: "#8affc1" }}
           >
             ← Back
           </button>
