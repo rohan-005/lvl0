@@ -1,0 +1,109 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.landing-root {
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at bottom right, #013101b4, #050505);
+  color: white;
+  font-family: "Press Start 2P", sans-serif;
+  position: relative;
+}
+
+/* LOGO */
+.lvl0-logo {
+  position: absolute;
+  top: 32px;
+  left: 48px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 7rem;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #00ff77;
+  user-select: none;
+}
+
+.underscore {
+  font-size: 3rem;
+  position: relative;
+  top: -10px;
+}
+
+/* LEFT CONTENT */
+.left-content {
+  position: absolute;
+  top: 200px;
+  left: 60px;
+  max-width: 700px;
+}
+
+/* HEADLINE */
+.headline {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+/* VISION TEXT */
+.vision-text {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: #c7c7c7;
+  margin-bottom: 20px;
+}
+
+.vision-text span {
+  color: #8affc1;
+}
+
+/* TECH LINE */
+.tech-line {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85rem;
+  color: #9a9a9a;
+  margin-bottom: 36px;
+}
+
+.tech-line code {
+  color: #00ff77;
+}
+
+/* AUTH BUTTONS */
+.auth-buttons {
+  display: flex;
+  gap: 18px;
+}
+
+.btn {
+  padding: 14px 34px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border: none;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+/* PRIMARY */
+.btn.primary {
+  background: linear-gradient(135deg, #8affc1, #5fffd2);
+  color: #000;
+}
+
+/* SECONDARY */
+.btn.secondary {
+  background: transparent;
+  color: #8affc1;
+  border: 1px solid #8affc1;
+}
