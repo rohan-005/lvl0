@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
 import LoadingButton from "../../ui_components/LoadingButton";
+import { useNavigate } from "react-router-dom";
 
 export default function ForgotPassword() {
   const {
@@ -18,7 +19,7 @@ export default function ForgotPassword() {
   const [resetToken, setResetToken] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const inputsRef = useRef([]);
 
   /* =========================
@@ -131,6 +132,7 @@ export default function ForgotPassword() {
     setEmail("");
     setPassword("");
     setOtp(Array(6).fill(""));
+    navigate("/login")
   };
 
   return (
