@@ -9,24 +9,21 @@ export default function AuthPage() {
   return (
     <div className="auth-root">
       <div
-        className={`auth-container ${
-          isRegister ? "right-panel-active" : ""
-        }`}
+        className={`auth-container ${isRegister ? "right-panel-active" : ""}`}
       >
         {/* LOGIN FORM */}
         <div className="form-container sign-in-container">
-          {!isRegister && <Login />}
+          <Login onSwitch={() => setIsRegister(true)} />
         </div>
 
         {/* REGISTER FORM */}
         <div className="form-container sign-up-container">
-          {isRegister && <Register />}
+          <Register onSwitch={() => setIsRegister(false)} />
         </div>
 
-        {/* OVERLAY */}
+        {/* OVERLAY (DESKTOP ONLY) */}
         <div className="overlay-container">
           <div className="overlay">
-            {/* LEFT OVERLAY */}
             <div className="overlay-panel overlay-left">
               <h1>Welcome Back</h1>
               <p>Login to continue your lvl0 journey</p>
@@ -39,7 +36,6 @@ export default function AuthPage() {
               </button>
             </div>
 
-            {/* RIGHT OVERLAY */}
             <div className="overlay-panel overlay-right">
               <h1>Hello Gamer</h1>
               <p>Create your lvl0 identity</p>

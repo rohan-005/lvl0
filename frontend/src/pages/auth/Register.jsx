@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import LoadingButton from "../../ui_components/LoadingButton";
 
-export default function Register() {
+export default function Register({ onSwitch }) {
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -62,6 +62,10 @@ export default function Register() {
       <input type="password" placeholder="Confirm Password" onChange={(e) => setData({ ...data, confirm: e.target.value })} required />
 
       <LoadingButton type="submit" loading={loading}>Register</LoadingButton>
+      <p className="auth-link mobile-toggle">
+        Already have an account?
+        <span onClick={onSwitch}> Sign In</span>
+      </p>
     </form>
   );
 }

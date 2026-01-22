@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import LoadingButton from "../../ui_components/LoadingButton";
 
-export default function Login() {
+export default function Login({ onSwitch }) {
   const [data, setData] = useState({ email: "", password: "" });
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -41,8 +41,13 @@ export default function Login() {
       <div className="auth-link">
         <Link to="/forgot-password">Forgot password?</Link>
       </div>
+      
 
       <LoadingButton type="submit" loading={loading}>Login</LoadingButton>
+      <p className="auth-link mobile-toggle">
+        Don’t have an account?
+        <span onClick={onSwitch}> Sign Up</span>
+      </p>
     </form>
   );
 }

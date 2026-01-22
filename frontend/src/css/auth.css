@@ -37,7 +37,7 @@
 }
 
 /* =========================
-   FORM CONTAINERS (FIXED)
+   FORM CONTAINERS (DESKTOP)
    ========================= */
 .form-container {
   position: absolute;
@@ -63,7 +63,7 @@
   z-index: 1;
 }
 
-/* WHEN REGISTER ACTIVE */
+/* DESKTOP SWITCH */
 .auth-container.right-panel-active .sign-in-container {
   transform: translateX(200%);
   opacity: 0;
@@ -75,7 +75,6 @@
   opacity: 1;
   z-index: 5;
 }
-
 
 /* =========================
    FORM
@@ -182,7 +181,7 @@ input:focus {
 }
 
 /* =========================
-   OVERLAY CONTAINER
+   OVERLAY (DESKTOP ONLY)
    ========================= */
 .overlay-container {
   position: absolute;
@@ -199,9 +198,6 @@ input:focus {
   transform: translateX(-100%);
 }
 
-/* =========================
-   OVERLAY
-   ========================= */
 .overlay {
   background: linear-gradient(135deg, #00ff77, #0f5132);
   color: #000;
@@ -216,9 +212,6 @@ input:focus {
   transform: translateX(50%);
 }
 
-/* =========================
-   OVERLAY PANELS
-   ========================= */
 .overlay-panel {
   position: absolute;
   top: 0;
@@ -254,9 +247,6 @@ input:focus {
   right: 0;
 }
 
-/* =========================
-   OVERLAY BUTTON
-   ========================= */
 button.ghost {
   margin-top: 20px;
   padding: 12px 44px;
@@ -269,26 +259,60 @@ button.ghost {
 }
 
 /* =========================
-   RESPONSIVE
+   MOBILE / SMALL DEVICES
+   VERTICAL SWITCH
    ========================= */
 @media (max-width: 900px) {
   .auth-container {
     width: 100%;
-    min-height: auto;
-  }
-
-  .form-container {
-    position: relative;
-    width: 100%;
-    transform: none !important;
-    opacity: 1 !important;
+    min-height: 90vh;
   }
 
   .overlay-container {
     display: none;
   }
+
+  .form-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    transition: transform 0.5s ease, opacity 0.4s ease;
+  }
+
+  /* LOGIN TOP */
+  .sign-in-container {
+    transform: translateY(0%);
+    opacity: 1;
+    z-index: 5;
+  }
+
+  /* REGISTER BOTTOM (HIDDEN) */
+  .sign-up-container {
+    transform: translateY(100%);
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* SWITCH */
+  .auth-container.right-panel-active .sign-in-container {
+    transform: translateY(-100%);
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .auth-container.right-panel-active .sign-up-container {
+    transform: translateY(0%);
+    opacity: 1;
+    z-index: 5;
+    pointer-events: auto;
+  }
 }
 
+/* EXTRA SMALL */
 @media (max-width: 480px) {
   .auth-form {
     padding: 28px;
