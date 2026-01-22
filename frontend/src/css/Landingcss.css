@@ -9,12 +9,12 @@
 
 html,
 body {
-  width: 100%;
+  width: 100vw;
   /* Default to hidden on desktop to keep your "App" feel */
-  height: 100%;
+  height: 100vh;
   overflow: hidden; 
-  background: radial-gradient(circle at bottom right, #013101b4, #050505);
-  background-attachment: fixed; /* Keeps gradient locked */
+  background: radial-gradient(circle at center right, #013101b4,#264f26b4, #000000);
+  background-attachment: fixed; 
 }
 
 /* ROOT */
@@ -122,7 +122,7 @@ body {
 
 .cards-container {
   width: 100%;
-  height: 100%;
+  height: 90%;
   display: grid;
   grid-template-columns: repeat(2, minmax(200px, 1fr));
   /* grid-auto-rows: min-content; */
@@ -138,6 +138,7 @@ body {
   width: 80%;
   /* Let content decide height, cleaner than fixed min-height */
   height: auto; 
+  min-height: 200px;
   margin-bottom: -200px;
   background: rgba(10, 10, 10, 0.95);
   border: 1.5px solid #fff;
@@ -175,15 +176,15 @@ body {
 @media (max-width: 900px) {
   /* 1. ENABLE SCROLLING ON BODY */
   html, body {
-    height: auto;
-    min-height: 100%;
+    height: 100%;
+    /* min-height: 100%; */
     overflow-y: auto; /* ALLOW SCROLL */
     overflow-x: hidden;
   }
 
   /* 2. RESET ROOT TO FLOW LAYOUT */
   .landing-root {
-    height: auto;
+    /* height: auto; */
     overflow: visible;
     display: flex;
     flex-direction: column;
@@ -212,7 +213,7 @@ body {
   .cards-layer {
     position: relative; /* No longer absolute */
     width: 100%;
-    height: auto; /* Expand to fit cards */
+    height: 100%;
     padding: 0px 24px 60px 50px; /* Bottom padding for scroll space */
   }
 
@@ -220,8 +221,8 @@ body {
     display: grid;
     /* Force 1 column on mobile for readability */
     grid-template-columns: 1fr; 
-    gap: 20px;
-    height: auto;
+    gap: 200px;
+    /* height: auto; */
     /* overflow: visible; */
     padding: 0;
   }

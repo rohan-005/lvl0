@@ -26,7 +26,7 @@ export default function AuthPage() {
           <div className="overlay">
             <div className="overlay-panel overlay-left">
               <h1>Welcome Back</h1>
-              <p>Login to continue your lvl0 journey</p>
+              <p>Login to continue your lvl_0 journey</p>
               <button
                 type="button"
                 className="ghost"
@@ -38,7 +38,7 @@ export default function AuthPage() {
 
             <div className="overlay-panel overlay-right">
               <h1>Hello Gamer</h1>
-              <p>Create your lvl0 identity</p>
+              <p>Create your lvl_0 identity</p>
               <button
                 type="button"
                 className="ghost"
