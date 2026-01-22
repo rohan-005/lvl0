@@ -148,9 +148,13 @@ router.post('/resend-otp', [
 // @desc    Get current user
 // @route   GET /api/auth/me
 // @access  Private
-router.get('/me', protect, async (req, res) => { // Add protect middleware here
+// @desc    Get current user
+// @route   GET /api/auth/me
+// @access  Private
+router.get('/me', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -160,14 +164,15 @@ router.get('/me', protect, async (req, res) => { // Add protect middleware here
       name: user.name,
       email: user.email,
       role: user.role,
+      accountType: user.accountType,
       isVerified: user.isVerified,
-      isApprovedByAdmin: user.isApprovedByAdmin,
     });
   } catch (error) {
     console.error('Get user profile error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 // @desc    Update user profile
 // @route   PUT /api/auth/profile
