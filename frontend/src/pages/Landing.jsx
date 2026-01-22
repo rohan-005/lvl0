@@ -141,7 +141,7 @@ const Landing = () => {
           </p>
 
           <div className="auth-buttons">
-            <Buttons variant="primary" onClick={() => navigate("/login")}>
+            <Buttons variant="primary" onClick={() => navigate("/auth/login")}>
               Login
             </Buttons>
 

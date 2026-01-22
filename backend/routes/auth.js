@@ -283,34 +283,4 @@ router.put('/change-password', [
 
 
 
-// Admin routes: approve user
-// PUT /api/auth/admin/approve/:id
-router.put('/admin/approve/:id', protect, async (req, res) => {
-  try {
-    // Only admin can approve
-    if (!req.user || req.user.role !== 'admin') {
-      return res.status(401).json({ message: 'Not authorized as an admin' });
-    }
-
-    const userId = req.params.id;
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    user.isApprovedByAdmin = true;
-    await user.save();
-
-    res.json({ message: 'User approved by admin', user: {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      isVerified: user.isVerified,
-      isApprovedByAdmin: user.isApprovedByAdmin
-    }});
-  } catch (error) {
-    console.error('Admin approve error:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
 module.exports = router;

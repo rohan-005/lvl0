@@ -2,13 +2,13 @@
   --neon: #00ff77;
   --neon-soft: #8affc1;
   --bg-dark: #050505;
-  --card-bg: rgba(10, 10, 10, 0.95);
+  --card-bg: rgba(10, 10, 10, 0.96);
   --border: rgba(255, 255, 255, 0.15);
   --text-dim: #bcbcbc;
 }
 
 /* =========================
-   BASE
+   ROOT
    ========================= */
 .auth-root {
   min-height: 100vh;
@@ -16,60 +16,98 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  color: white;
+  padding: 24px;
   font-family: "Space Grotesk", sans-serif;
+  color: white;
 }
 
-.auth-card {
-  width: 100%;
-  max-width: 420px;
+/* =========================
+   MAIN AUTH CONTAINER
+   ========================= */
+.auth-container {
   background: var(--card-bg);
-  border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 32px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+  position: relative;
+  overflow: hidden;
+  width: 1000px;
+  max-width: 100%;
+  min-height: 520px;
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
 }
 
 /* =========================
-   HEADER
+   FORM CONTAINERS
    ========================= */
-.auth-logo {
-  font-family: "Orbitron", sans-serif;
-  font-size: 2.1rem;
-  font-weight: 900;
-  color: var(--neon);
-  text-align: center;
+.form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
-.auth-sub {
-  text-align: center;
-  color: var(--text-dim);
-  font-size: 0.85rem;
-  margin: 8px 0 26px;
+.sign-in-container {
+  left: 0;
+  z-index: 2;
+}
+
+.auth-container.right-panel-active .sign-in-container {
+  transform: translateX(100%);
+}
+
+.sign-up-container {
+  left: 0;
+  opacity: 0;
+  z-index: 1;
+}
+
+.auth-container.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
 }
 
 /* =========================
-   FORM
+   FORM STYLING
    ========================= */
-.auth-card form {
+form {
+  background: transparent;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  justify-content: center;
+  height: 100%;
+  padding: 0 56px;
+  text-align: center;
 }
 
-.auth-card input {
+form h1 {
+  font-family: "Orbitron", sans-serif;
+  color: var(--neon);
+  font-size: 2rem;
+  margin-bottom: 24px;
+}
+
+form p {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+
+input {
   background: transparent;
   border: 1px solid var(--border);
   padding: 12px 14px;
   border-radius: 10px;
+  margin: 8px 0;
   color: white;
   font-size: 0.9rem;
 }
 
-.auth-card input:focus {
+input:focus {
   outline: none;
   border-color: var(--neon);
+  box-shadow: 0 0 12px rgba(0, 255, 119, 0.25);
 }
 
 /* =========================
@@ -78,6 +116,7 @@
 .radio-group {
   display: flex;
   gap: 12px;
+  margin: 10px 0;
 }
 
 .radio-card {
@@ -85,10 +124,9 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 14px;
-  text-align: center;
   cursor: pointer;
-  transition: all 0.25s ease;
   color: var(--text-dim);
+  transition: all 0.25s ease;
   font-size: 0.85rem;
 }
 
@@ -106,7 +144,7 @@
    BUTTON
    ========================= */
 .auth-btn {
-  margin-top: 10px;
+  margin-top: 14px;
   padding: 14px;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--neon), var(--neon-soft));
@@ -126,7 +164,6 @@
    ========================= */
 .auth-link {
   margin-top: 18px;
-  text-align: center;
   font-size: 0.8rem;
   color: var(--text-dim);
 }
@@ -137,30 +174,98 @@
 }
 
 /* =========================
-   RESPONSIVE
+   OVERLAY CONTAINER
    ========================= */
-@media (max-width: 480px) {
-  .auth-card {
-    padding: 24px;
-  }
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 100;
+  transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+}
 
-  .auth-logo {
-    font-size: 1.8rem;
-  }
-
-  .radio-group {
-    flex-direction: column;
-  }
-
-  .radio-card {
-    padding: 12px;
-  }
+.auth-container.right-panel-active .overlay-container {
+  transform: translateX(-100%);
 }
 
 /* =========================
-   OTP VERIFICATION
+   OVERLAY
    ========================= */
+.overlay {
+  background: linear-gradient(135deg, #00ff77, #0f5132);
+  color: #000;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+}
 
+.auth-container.right-panel-active .overlay {
+  transform: translateX(50%);
+}
+
+/* =========================
+   OVERLAY PANELS
+   ========================= */
+.overlay-panel {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 40px;
+}
+
+.overlay-panel h1 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.overlay-panel p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* LEFT */
+.overlay-left {
+  transform: translateX(-20%);
+}
+
+.auth-container.right-panel-active .overlay-left {
+  transform: translateX(0);
+}
+
+/* RIGHT */
+.overlay-right {
+  right: 0;
+}
+
+/* =========================
+   OVERLAY BUTTON
+   ========================= */
+button.ghost {
+  margin-top: 20px;
+  padding: 12px 44px;
+  border-radius: 999px;
+  border: 2px solid #000;
+  background: transparent;
+  font-weight: 700;
+  cursor: pointer;
+  color: #000;
+}
+
+/* =========================
+   OTP
+   ========================= */
 .otp-group {
   display: flex;
   justify-content: space-between;
@@ -179,45 +284,35 @@
   font-weight: 700;
   color: var(--neon);
   font-family: "JetBrains Mono", monospace;
-  transition: all 0.2s ease;
-}
-
-.otp-input:focus {
-  outline: none;
-  border-color: var(--neon);
-  box-shadow: 0 0 14px rgba(0, 255, 119, 0.35);
-  transform: translateY(-2px);
 }
 
 /* =========================
-   OTP ACTION LINKS
+   RESPONSIVE
    ========================= */
-
-.auth-link button {
-  background: none;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 0;
-}
-
-.auth-link button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* =========================
-   MOBILE OTP TWEAKS
-   ========================= */
-
-@media (max-width: 480px) {
-  .otp-group {
-    gap: 8px;
+@media (max-width: 900px) {
+  .auth-container {
+    width: 100%;
+    min-height: auto;
   }
 
-  .otp-input {
-    width: 44px;
-    height: 52px;
-    font-size: 1.1rem;
+  .form-container,
+  .overlay-container {
+    width: 100%;
+    position: relative;
+    transform: none !important;
+  }
+
+  .overlay {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  form {
+    padding: 32px;
+  }
+
+  .radio-group {
+    flex-direction: column;
   }
 }
