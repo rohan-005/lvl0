@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import "../../css/auth.css";
+import "../../css/auth2.css";
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
@@ -132,7 +132,7 @@ export default function ForgotPassword() {
     setEmail("");
     setPassword("");
     setOtp(Array(6).fill(""));
-    navigate("/login")
+    navigate("/auth")
   };
 
   return (

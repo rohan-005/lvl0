@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../../css/auth.css";
+import "../../css/auth2.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../../utils/axiosConfig";

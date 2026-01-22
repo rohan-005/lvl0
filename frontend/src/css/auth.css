@@ -22,11 +22,11 @@
 }
 
 /* =========================
-   MAIN AUTH CONTAINER
+   AUTH CONTAINER
    ========================= */
 .auth-container {
   background: var(--card-bg);
-  border-radius: 18px;
+  border-radius: 20px;
   position: relative;
   overflow: hidden;
   width: 1000px;
@@ -37,27 +37,35 @@
 }
 
 /* =========================
-   FORM CONTAINERS
+   FORM CONTAINERS (FIXED)
    ========================= */
 .form-container {
   position: absolute;
   top: 0;
   height: 100%;
   width: 50%;
-  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1),
+              opacity 0.4s ease;
 }
 
+/* LOGIN */
 .sign-in-container {
   left: 0;
   z-index: 2;
+  transform: translateX(0%);
 }
 
-.auth-container.right-panel-active .sign-in-container {
-  transform: translateX(100%);
-}
-
+/* REGISTER (HIDDEN INIT) */
 .sign-up-container {
   left: 0;
+  transform: translateX(0%);
+  opacity: 0;
+  z-index: 1;
+}
+
+/* WHEN REGISTER ACTIVE */
+.auth-container.right-panel-active .sign-in-container {
+  transform: translateX(200%);
   opacity: 0;
   z-index: 1;
 }
@@ -68,30 +76,30 @@
   z-index: 5;
 }
 
+
 /* =========================
-   FORM STYLING
+   FORM
    ========================= */
-form {
-  background: transparent;
+.auth-form {
+  height: 100%;
+  padding: 56px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
-  padding: 0 56px;
   text-align: center;
 }
 
-form h1 {
+.auth-form h2 {
   font-family: "Orbitron", sans-serif;
   color: var(--neon);
   font-size: 2rem;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
-form p {
+.auth-form p {
   font-size: 0.85rem;
   color: var(--text-dim);
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 input {
@@ -102,6 +110,10 @@ input {
   margin: 8px 0;
   color: white;
   font-size: 0.9rem;
+}
+
+input::placeholder {
+  color: #888;
 }
 
 input:focus {
@@ -116,35 +128,31 @@ input:focus {
 .radio-group {
   display: flex;
   gap: 12px;
-  margin: 10px 0;
+  margin: 14px 0;
 }
 
-.radio-card {
+.radio-btn {
   flex: 1;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px;
-  cursor: pointer;
+  background: transparent;
   color: var(--text-dim);
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
   transition: all 0.25s ease;
-  font-size: 0.85rem;
 }
 
-.radio-card input {
-  display: none;
-}
-
-.radio-card.active {
+.radio-btn.active {
   border-color: var(--neon);
   color: var(--neon);
-  box-shadow: 0 0 18px rgba(0, 255, 119, 0.25);
+  box-shadow: 0 0 14px rgba(0, 255, 119, 0.25);
 }
 
 /* =========================
    BUTTON
    ========================= */
 .auth-btn {
-  margin-top: 14px;
+  margin-top: 16px;
   padding: 14px;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--neon), var(--neon-soft));
@@ -163,7 +171,7 @@ input:focus {
    LINKS
    ========================= */
 .auth-link {
-  margin-top: 18px;
+  margin: 12px;
   font-size: 0.8rem;
   color: var(--text-dim);
 }
@@ -183,7 +191,7 @@ input:focus {
   width: 50%;
   height: 100%;
   overflow: hidden;
-  z-index: 100;
+  z-index: 10;
   transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
@@ -201,7 +209,6 @@ input:focus {
   left: -100%;
   height: 100%;
   width: 200%;
-  transform: translateX(0);
   transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
@@ -235,7 +242,6 @@ input:focus {
   line-height: 1.4;
 }
 
-/* LEFT */
 .overlay-left {
   transform: translateX(-20%);
 }
@@ -244,7 +250,6 @@ input:focus {
   transform: translateX(0);
 }
 
-/* RIGHT */
 .overlay-right {
   right: 0;
 }
@@ -264,29 +269,6 @@ button.ghost {
 }
 
 /* =========================
-   OTP
-   ========================= */
-.otp-group {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 28px 0;
-}
-
-.otp-input {
-  width: 48px;
-  height: 56px;
-  background: transparent;
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  text-align: center;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--neon);
-  font-family: "JetBrains Mono", monospace;
-}
-
-/* =========================
    RESPONSIVE
    ========================= */
 @media (max-width: 900px) {
@@ -295,21 +277,21 @@ button.ghost {
     min-height: auto;
   }
 
-  .form-container,
-  .overlay-container {
-    width: 100%;
+  .form-container {
     position: relative;
+    width: 100%;
     transform: none !important;
+    opacity: 1 !important;
   }
 
-  .overlay {
+  .overlay-container {
     display: none;
   }
 }
 
 @media (max-width: 480px) {
-  form {
-    padding: 32px;
+  .auth-form {
+    padding: 28px;
   }
 
   .radio-group {

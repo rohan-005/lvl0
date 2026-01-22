@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import LoadingButton from "../../ui_components/LoadingButton";
 
 export default function Register() {
-  const [formData, setFormData] = useState({
+  const [data, setData] = useState({
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirm: "",
+    accountType: "gamer",
   });
 
   const { register } = useAuth();
@@ -18,35 +19,49 @@ export default function Register() {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword)
-      return toast.error("Password mismatch");
+    if (data.password !== data.confirm)
+      return toast.error("Passwords do not match");
 
     setLoading(true);
     const res = await register(
-      formData.name,
-      formData.email,
-      formData.password,
-      "gamer"
+      data.name,
+      data.email,
+      data.password,
+      data.accountType
     );
     setLoading(false);
 
     if (!res.success) return toast.error(res.message);
     toast.success("Verify your email");
-    navigate("/verify-email", { state: { email: formData.email } });
+    navigate("/verify-email", { state: { email: data.email } });
   };
 
   return (
-    <div className="form-container sign-up-container">
-      <form onSubmit={submit}>
-        <h1>Register</h1>
+    <form className="auth-form" onSubmit={submit}>
+      <h2>Register</h2>
 
-        <input placeholder="Username" onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-        <input type="email" placeholder="Email" onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
-        <input type="password" placeholder="Password" onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
-        <input type="password" placeholder="Confirm Password" onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} />
+      <input placeholder="Username" onChange={(e) => setData({ ...data, name: e.target.value })} required />
+      <input type="email" placeholder="Email" onChange={(e) => setData({ ...data, email: e.target.value })} required />
 
-        <LoadingButton loading={loading}>Register</LoadingButton>
-      </form>
-    </div>
+      <div className="radio-group">
+        <button type="button"
+          className={`radio-btn ${data.accountType === "gamer" ? "active" : ""}`}
+          onClick={() => setData({ ...data, accountType: "gamer" })}
+        >
+          🎮 Gamer
+        </button>
+        <button type="button"
+          className={`radio-btn ${data.accountType === "developer" ? "active" : ""}`}
+          onClick={() => setData({ ...data, accountType: "developer" })}
+        >
+          💻 Developer
+        </button>
+      </div>
+
+      <input type="password" placeholder="Password" onChange={(e) => setData({ ...data, password: e.target.value })} required />
+      <input type="password" placeholder="Confirm Password" onChange={(e) => setData({ ...data, confirm: e.target.value })} required />
+
+      <LoadingButton type="submit" loading={loading}>Register</LoadingButton>
+    </form>
   );
 }
