@@ -36,6 +36,14 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   /* =========================
+     CENTRAL USER SYNC (CRITICAL)
+     ========================= */
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
+  /* =========================
      LOGIN
      ========================= */
   const login = async (email, password) => {
@@ -147,13 +155,22 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+
+    // auth
     login,
     register,
     logout,
+
+    // password
     forgotPassword,
     verifyPasswordResetOTP,
     resetPassword,
     resendPasswordResetOTP,
+
+    // identity (IMPORTANT)
+    updateUser,
+
+    // utils
     getAccountType: () => localStorage.getItem("accountType"),
   };
 

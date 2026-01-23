@@ -42,6 +42,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    avatar: {
+      type: String,
+      default: function () {
+        return `https://api.dicebear.com/7.x/identicon/svg?seed=${this._id}`;
+      },
+    },
 
     // OTPs
     emailVerificationOTP: String,
@@ -49,7 +55,7 @@ const userSchema = new mongoose.Schema(
     passwordResetOTP: String,
     passwordResetOTPExpire: Date,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 /* Password hash */

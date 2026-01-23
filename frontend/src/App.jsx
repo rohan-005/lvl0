@@ -7,6 +7,8 @@ import AuthPage from "./pages/auth/AuthPage";
 import OTPVerification from "./pages/auth/OTPVerification";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import Home from "./pages/home/Home";
+import Profile from "./pages/profile/Profile";
+import './App.css'
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
           <Route path="/verify-email" element={<OTPVerification />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>
     </AuthProvider>

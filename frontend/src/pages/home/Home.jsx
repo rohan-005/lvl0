@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../../css/home.css";
 import Button from "../../ui_components/Button";
 
+
 const Home = () => {
   /* =====================
      STATE
@@ -131,7 +132,7 @@ const Home = () => {
         {/* MOBILE AVATAR */}
         {!loadingProfile && (
           <img
-            src={getAvatarUrl(user)}
+            src={user.avatar}
             alt="avatar"
             className="mobile-header-avatar"
             onClick={() => setShowMobileProfile(true)}
