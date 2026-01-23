@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../css/home.css";
+import Button from "../../ui_components/Button";
 
 const Home = () => {
   /* =====================
@@ -7,10 +9,8 @@ const Home = () => {
      ===================== */
   const [user, setUser] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
+  const navigate = useNavigate();
 
-  /* =====================
-     GUEST USER
-     ===================== */
   const guestUser = {
     name: "Guest",
     role: "guest",
@@ -20,18 +20,65 @@ const Home = () => {
   };
 
   /* =====================
-     STATIC CONTENT
+     MOCK DATA
      ===================== */
   const exploreLinks = [
     "Games",
+    "Genres",
     "Communities",
     "Dev Labs",
     "Challenges",
     "Leaderboard",
   ];
 
+  const newsFeed = [
+    {
+      id: 1,
+      title: "Cyberpunk 2 Pre-Production",
+      desc: "CDPR confirms Unreal Engine 5 pipeline.",
+      tag: "NEWS",
+    },
+    {
+      id: 2,
+      title: "Indie Gems 2026",
+      desc: "Small studios redefining creativity.",
+      tag: "INDIE",
+    },
+    {
+      id: 3,
+      title: "RTX 6090 Review",
+      desc: "Performance leap or marketing hype?",
+      tag: "TECH",
+    },
+  ];
+
+  const featuredGames = [
+    { id: 1, name: "Echoes of Eleria", genre: "Adventure" },
+    { id: 2, name: "Fractured Realms", genre: "RPG" },
+  ];
+
+  const trendingGenres = ["RPG", "FPS", "INDIE", "SIM", "HORROR"];
+  const activeDiscussions = [
+    "Best Soulslike combat?",
+    "Unity vs Unreal 2026",
+    "AI-driven NPC behavior",
+  ];
+  const getAvatarUrl = (user) => {
+    const seed = user?.email || user?.name || "guest";
+
+    let style = "identicon"; // default
+
+    if (user?.accountType === "developer") {
+      style = "bottts-neutral";
+    } else if (user?.accountType === "gamer") {
+      style = "pixel-art";
+    }
+
+    return `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
+  };
+
   /* =====================
-     FETCH PROFILE
+     AUTH
      ===================== */
   useEffect(() => {
     const fetchProfile = async () => {
@@ -44,9 +91,7 @@ const Home = () => {
         }
 
         const res = await fetch("/api/auth/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!res.ok) {
@@ -65,7 +110,6 @@ const Home = () => {
           isVerified: data.isVerified,
         });
       } catch (err) {
-        console.error("Profile fetch error:", err);
         setUser(guestUser);
       } finally {
         setLoadingProfile(false);
@@ -75,59 +119,130 @@ const Home = () => {
     fetchProfile();
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(guestUser);
+    navigate("/auth");
+  };
+
   /* =====================
      UI
      ===================== */
   return (
-    <div className="home">
-      <div className="home-layout">
+    <div className="dashboard-root">
+      {/* HEADER */}
+      <header className="dashboard-header">
+        <div className="lvl0-logo">
+          lvl<span className="underscore">_</span>0
+        </div>
+      </header>
 
+      <div className="dashboard-layout">
         {/* LEFT SIDEBAR */}
-        <aside className="sidebar left">
-          <div className="card logo-card">lvl_0</div>
-
-          {/* PROFILE */}
-          <div className="card">
-            <h4>Profile</h4>
+        <aside className="sidebar left-sidebar">
+          <div className="glass-panel">
+            <h3 className="panel-title">IDENTITY</h3>
 
             {loadingProfile ? (
-              <p className="dim">Loading...</p>
+              <p className="dim-text">Loading data...</p>
             ) : (
-              <>
-                <p className="username">{user.name}</p>
+              <div className="profile-content">
+                <img
+                  src={getAvatarUrl(user)}
+                  alt="User Avatar"
+                  className="avatar-img"
+                />
+
+                <p className="user-name">{user.name}</p>
 
                 {user.role === "guest" ? (
-                  <p className="dim">Login to unlock features</p>
+                  <button className="btn primary small">INIT_LOGIN</button>
                 ) : (
                   <>
-                    <p className="dim">{user.email}</p>
-
-                    {user.accountType && (
-                      <p className="dim">
-                        {user.accountType === "developer"
-                          ? "🛠 Developer"
-                          : "🎮 Gamer"}
-                      </p>
-                    )}
+                    <p className="user-role">
+                      class:{" "}
+                      {user.accountType === "developer" ? "DEVELOPER" : "GAMER"}
+                    </p>
 
                     {!user.isVerified && (
-                      <p className="warning">Email not verified</p>
+                      <p className="status-warning">⚠ UNVERIFIED</p>
                     )}
+
+                    <Button onClick={()=>navigate("/profile")}>PROFIE</Button>
+                    <Button >LOGOUT</Button>
                   </>
                 )}
-              </>
+              </div>
             )}
           </div>
 
-          {/* EXPLORE */}
-          <div className="card">
-            <h4>Explore</h4>
+          <div className="glass-panel">
+            <h3 className="panel-title">EXPLORE</h3>
             {exploreLinks.map((item, i) => (
-              <p key={i} className="link-item">{item}</p>
+              <div key={i} className="nav-item">
+                {item}
+              </div>
             ))}
           </div>
         </aside>
 
+        {/* MAIN FEED */}
+        <main className="main-feed">
+          <div className="section-header">
+            <h2 className="section-title">NEWS_FEED</h2>
+            <div className="divider"></div>
+          </div>
+
+          {newsFeed.map((news) => (
+            <div key={news.id} className="glass-panel news-card">
+              <div className="news-header">
+                <h3>{news.title}</h3>
+                <span className="tag">{news.tag}</span>
+              </div>
+
+              <p className="dim-text">{news.desc}</p>
+
+              <div className="card-footer">
+                <button className="btn secondary tiny">READ_LOG</button>
+              </div>
+            </div>
+          ))}
+
+          <div className="section-header" style={{ marginTop: "32px" }}>
+            <h2 className="section-title">FEATURED_GAMES</h2>
+            <div className="divider"></div>
+          </div>
+
+          <div className="games-grid">
+            {featuredGames.map((game) => (
+              <div key={game.id} className="glass-panel game-card">
+                <h4>{game.name}</h4>
+                <p className="dim-text genre">{game.genre}</p>
+              </div>
+            ))}
+          </div>
+        </main>
+
+        {/* RIGHT SIDEBAR */}
+        <aside className="sidebar right-sidebar">
+          <div className="glass-panel">
+            <h3 className="panel-title">TRENDING</h3>
+            {trendingGenres.map((g, i) => (
+              <p key={i} className="list-link">
+                #{g}
+              </p>
+            ))}
+          </div>
+
+          <div className="glass-panel">
+            <h3 className="panel-title">DISCUSSIONS</h3>
+            {activeDiscussions.map((d, i) => (
+              <div key={i} className="discussion-item">
+                <span className="arrow">{">"}</span> {d}
+              </div>
+            ))}
+          </div>
+        </aside>
       </div>
     </div>
   );

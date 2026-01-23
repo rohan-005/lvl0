@@ -110,7 +110,7 @@ const Landing = () => {
     <div className="landing-root">
       {/* LOGO */}
       <motion.div
-        className="lvl0-logo"
+        className="lvl0-logo-home"
         variants={logoVariants}
         initial="start"
         animate="end"
