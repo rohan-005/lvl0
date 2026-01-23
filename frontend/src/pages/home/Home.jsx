@@ -9,6 +9,7 @@ const Home = () => {
      ===================== */
   const [user, setUser] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
+  const [showMobileProfile, setShowMobileProfile] = useState(false);
   const navigate = useNavigate();
 
   const guestUser = {
@@ -63,16 +64,13 @@ const Home = () => {
     "Unity vs Unreal 2026",
     "AI-driven NPC behavior",
   ];
+
   const getAvatarUrl = (user) => {
     const seed = user?.email || user?.name || "guest";
+    let style = "identicon";
 
-    let style = "identicon"; // default
-
-    if (user?.accountType === "developer") {
-      style = "bottts-neutral";
-    } else if (user?.accountType === "gamer") {
-      style = "pixel-art";
-    }
+    if (user?.accountType === "developer") style = "bottts-neutral";
+    else if (user?.accountType === "gamer") style = "pixel-art";
 
     return `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
   };
@@ -109,7 +107,7 @@ const Home = () => {
           accountType: data.accountType,
           isVerified: data.isVerified,
         });
-      } catch (err) {
+      } catch {
         setUser(guestUser);
       } finally {
         setLoadingProfile(false);
@@ -118,12 +116,6 @@ const Home = () => {
 
     fetchProfile();
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUser(guestUser);
-    navigate("/auth");
-  };
 
   /* =====================
      UI
@@ -135,10 +127,73 @@ const Home = () => {
         <div className="lvl0-logo">
           lvl<span className="underscore">_</span>0
         </div>
+
+        {/* MOBILE AVATAR */}
+        {!loadingProfile && (
+          <img
+            src={getAvatarUrl(user)}
+            alt="avatar"
+            className="mobile-header-avatar"
+            onClick={() => setShowMobileProfile(true)}
+          />
+        )}
       </header>
 
+      {/* MOBILE PROFILE MODAL */}
+      {showMobileProfile && (
+        <div className="mobile-profile-modal">
+          <div
+            className="modal-backdrop"
+            onClick={() => setShowMobileProfile(false)}
+          />
+
+          <div className="modal-card">
+            <button
+              className="modal-close"
+              onClick={() => setShowMobileProfile(false)}
+            >
+              ✕
+            </button>
+
+            <div className="glass-panel modal-profile-card">
+              <h3 className="panel-title">IDENTITY</h3>
+
+              <div className="profile-content">
+                <img
+                  src={getAvatarUrl(user)}
+                  alt="User Avatar"
+                  className="avatar-img"
+                />
+
+                <p className="user-name">{user.name}</p>
+
+                {user.role === "guest" ? (
+                  <button className="btn primary small">INIT_LOGIN</button>
+                ) : (
+                  <>
+                    <p className="user-role">
+                      class: {user.accountType === "developer" ? "DEVELOPER" : "GAMER"}
+                    </p>
+
+                    {!user.isVerified && (
+                      <p className="status-warning">⚠ UNVERIFIED</p>
+                    )}
+
+                    <Button onClick={() => navigate("/profile")}>
+                      PROFILE
+                    </Button>
+                    <Button onClick={() => navigate("/auth")}>
+                      LOGOUT
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="dashboard-layout">
-        {/* LEFT SIDEBAR */}
+        {/* LEFT SIDEBAR (DESKTOP ONLY) */}
         <aside className="sidebar left-sidebar">
           <div className="glass-panel">
             <h3 className="panel-title">IDENTITY</h3>
@@ -161,15 +216,21 @@ const Home = () => {
                   <>
                     <p className="user-role">
                       class:{" "}
-                      {user.accountType === "developer" ? "DEVELOPER" : "GAMER"}
+                      {user.accountType === "developer"
+                        ? "DEVELOPER"
+                        : "GAMER"}
                     </p>
 
                     {!user.isVerified && (
                       <p className="status-warning">⚠ UNVERIFIED</p>
                     )}
 
-                    <Button onClick={()=>navigate("/profile")}>PROFIE</Button>
-                    <Button >LOGOUT</Button>
+                    <Button onClick={() => navigate("/profile")}>
+                      PROFILE
+                    </Button>
+                    <Button onClick={() => navigate("/auth")}>
+                      LOGOUT
+                    </Button>
                   </>
                 )}
               </div>
@@ -201,10 +262,6 @@ const Home = () => {
               </div>
 
               <p className="dim-text">{news.desc}</p>
-
-              <div className="card-footer">
-                <button className="btn secondary tiny">READ_LOG</button>
-              </div>
             </div>
           ))}
 
@@ -223,7 +280,7 @@ const Home = () => {
           </div>
         </main>
 
-        {/* RIGHT SIDEBAR */}
+        {/* RIGHT SIDEBAR (DESKTOP ONLY) */}
         <aside className="sidebar right-sidebar">
           <div className="glass-panel">
             <h3 className="panel-title">TRENDING</h3>

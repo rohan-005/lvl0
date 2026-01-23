@@ -3,12 +3,9 @@
 /* ================= VARIABLES ================= */
 :root {
   --neon-green: #00ff77;
-
   --bg-main: radial-gradient(circle at top right, #013101, #000000 70%);
   --glass-bg: rgba(14, 14, 14, 0.94);
-
   --border-dim: rgba(255, 255, 255, 0.14);
-
   --text-main: #ffffff;
   --text-dim: #bdbdbd;
 }
@@ -19,14 +16,22 @@
   margin: 0;
   padding: 0;
 }
+
+body {
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: "Space Grotesk", sans-serif;
+}
+
+/* ================= LOGO ================= */
 .lvl0-logo {
   position: absolute;
   top: 32px;
   left: 48px;
   font-family: "Orbitron", sans-serif;
-  font-size: clamp(2rem, 5vw, 4rem); /* Adjusted for scaling */
+  font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 900;
-  color: #00ff77;
+  color: var(--neon-green);
   z-index: 10;
 }
 
@@ -34,12 +39,6 @@
   font-size: 0.5em;
   position: relative;
   top: -0.2em;
-}
-
-body {
-  background: var(--bg-main);
-  color: var(--text-main);
-  font-family: "Space Grotesk", sans-serif;
 }
 
 /* ================= LAYOUT ================= */
@@ -54,46 +53,23 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 32px;
-  flex-wrap: wrap;
-  gap: 12px;
 }
 
 .dashboard-layout {
   display: grid;
   grid-template-columns: 260px 1fr 260px;
   gap: 20px;
-  width: 100%;
 }
 
-.left-sidebar{
+.left-sidebar {
   margin-top: 100px;
-}
-
-/* ================= BRAND ================= */
-
-
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-.brand-sub {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-}
-
-.system-status {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.75rem;
-  display: flex;
-  gap: 6px;
-  align-items: center;
 }
 
 /* ================= PANELS ================= */
 .glass-panel {
   background: var(--glass-bg);
   border: 1px solid var(--border-dim);
-  border-radius: 8px; /* subtle, not sharp */
+  border-radius: 8px;
   padding: 20px;
   margin-bottom: 16px;
 }
@@ -101,7 +77,6 @@ body {
 /* ================= PROFILE ================= */
 .profile-content {
   text-align: center;
-  height: auto;
   padding: 20px;
 }
 
@@ -110,7 +85,6 @@ body {
   height: 64px;
   border-radius: 50%;
   border: 1px solid var(--border-dim);
-  background: rgba(255, 255, 255, 0.05);
   object-fit: cover;
 }
 
@@ -120,16 +94,14 @@ body {
 }
 
 .user-role {
-  font-family: "JetBrains Mono";
-  font-size: 1rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9rem;
   color: var(--text-dim);
-  margin-bottom: 8px;
 }
 
 .status-warning {
   color: #ffb703;
   font-size: 0.7rem;
-  margin-bottom: 10px;
 }
 
 /* ================= NAV ================= */
@@ -172,7 +144,7 @@ body {
 }
 
 .tag {
-  font-family: "JetBrains Mono";
+  font-family: "JetBrains Mono", monospace;
   font-size: 0.6rem;
   border: 1px solid var(--border-dim);
   padding: 3px 8px;
@@ -192,132 +164,84 @@ body {
   gap: 14px;
 }
 
-.game-card {
-  text-align: center;
+/* ================= MOBILE HEADER AVATAR ================= */
+.mobile-header-avatar {
+  display: none;
 }
-
-/* ================= BUTTONS ================= */
-.btn {
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  text-transform: uppercase;
+.mobile-profile-modal{
+  display: none;
 }
-
-.btn.primary {
-  background: linear-gradient(135deg, #8affc1, #5fffd2);
-  padding: 8px 20px;
-  border-radius: 20px;
-  color: #000;
-}
-
-.btn.secondary {
-  background: transparent;
-  border: 1px solid var(--neon-green);
-  color: var(--neon-green);
-  padding: 6px 16px;
-  border-radius: 16px;
-}
-
-.btn.tiny {
-  font-size: 0.6rem;
-}
-
-.logout-btn {
-  margin-top: 6px;
-}
-
-/* ================= LISTS ================= */
-.list-link {
-  cursor: pointer;
-  margin-bottom: 8px;
-}
-
-.list-link:hover {
-  color: var(--neon-green);
-}
-
-.discussion-item {
-  font-size: 0.85rem;
-  margin-bottom: 8px;
-}
-
-.discussion-item .arrow {
-  color: var(--neon-green);
-  margin-right: 6px;
-}
-
-/* ================= RESPONSIVE ================= */
+/* ================= MOBILE FIXES ONLY ================= */
 @media (max-width: 800px) {
+  /* Header */
+  .lvl0-logo {
+    position: static;
+    font-size: 2.2rem;
+  }
+
+  .mobile-header-avatar {
+    display: block;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--border-dim);
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  /* Layout */
   .dashboard-layout {
     grid-template-columns: 1fr;
-    gap: 16px;
   }
 
-  /* Show left sidebar content as top section */
-  .left-sidebar {
-    order: -1;
-    margin-top: 0;
-  }
-
+  .left-sidebar,
   .right-sidebar {
     display: none;
   }
 
-  .sidebar {
-    display: block;
+  /* News feed */
+  .news-card {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border-dim);
+    border-radius: 0;
+    padding: 14px 0;
   }
 }
+
+/* ================= MOBILE PROFILE MODAL (CARD) ================= */
 @media (max-width: 800px) {
-  .left-sidebar .glass-panel:first-child {
+  .mobile-profile-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
     display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
+    justify-content: center;
+    align-items: flex-start;
   }
 
-  .left-sidebar .panel-title {
-    display: none;
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
   }
 
-  .profile-content {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 0;
-    text-align: left;
+  .modal-card {
+    position: relative;
+    margin-top: 80px;
     width: 100%;
+    max-width: 360px;
+    padding: 0 16px;
   }
 
-  .avatar-img {
-    width: 56px;
-    height: 56px;
-    flex-shrink: 0;
-  }
-
-  .user-name {
-    font-size: 1.2rem;
-  }
-
-  .user-role {
-    font-size: 0.75rem;
+  .modal-close {
+    position: absolute;
+    top: -36px;
+    right: 24px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.4rem;
+    cursor: pointer;
   }
 }
-@media (max-width: 800px) {
-  .profile-content button {
-    margin-top: 6px;
-    width: fit-content;
-  }
-}
-@media (max-width: 600px) {
-  .left-sidebar .glass-panel:nth-child(2) {
-    display: none;
-  }
-}
-@media (max-width: 800px) {
-  .lvl0-logo {
-    position: static;
-    margin-bottom: 12px;
-  }
-}
-
