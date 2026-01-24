@@ -12,8 +12,9 @@ body {
   width: 100vw;
   /* Default to hidden on desktop to keep your "App" feel */
   height: 100vh;
-  overflow: hidden; 
-  background: radial-gradient(circle at center right, #013101b4,#264f26b4, #000000);
+  /* overflow: hidden;  */
+  background: repeat;
+  /* background: radial-gradient(circle at center right, #013101b4,#264f26b4, #000000); */
   background-attachment: fixed; 
 }
 

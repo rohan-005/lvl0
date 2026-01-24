@@ -3,7 +3,7 @@
 /* ================= VARIABLES ================= */
 :root {
   --neon-green: #00ff77;
-  --bg-main: radial-gradient(circle at top right, #013101, #000000 70%);
+  --bg-main: linear-gradient(to left, #013101,#293a28,#000000 100%);
   --glass-bg: rgba(14, 14, 14, 0.94);
   --border-dim: rgba(255, 255, 255, 0.14);
   --text-main: #ffffff;
@@ -19,6 +19,9 @@
 
 body {
   background: var(--bg-main);
+  height: 100vh;
+  min-height: 100vh;
+  background-size: cover;
   color: var(--text-main);
   font-family: "Space Grotesk", sans-serif;
 }

@@ -1,34 +1,233 @@
+/* =====================
+   PAGE
+   ===================== */
+
 .news-page {
   padding: 30px;
+  color: #eaeaea;
 }
 
+/* =====================
+   SEARCH BAR
+   ===================== */
+
 .news-search {
+  position: relative;
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .news-search input {
   flex: 1;
-  padding: 10px;
+  padding: 12px 14px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: #eaeaea;
+  font-size: 14px;
+  outline: none;
 }
+
+.news-search input::placeholder {
+  color: #777;
+}
+
+.news-search input:focus {
+  border-color: rgba(0, 255, 119, 0.6);
+}
+
+.news-search button {
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #00ff77, #8affc1);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #050505;
+  font-weight: 600;
+}
+
+/* =====================
+   GRID
+   ===================== */
 
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
 }
 
+/* =====================
+   CARD
+   ===================== */
+
 .news-card {
-  background: #111;
-  border-radius: 10px;
-  padding: 15px;
-  text-decoration: none;
-  color: white;
+  background: rgba(10, 10, 10, 0.95);
+  border-radius: 14px;
+  overflow: hidden;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.news-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 255, 119, 0.5);
 }
 
 .news-card img {
   width: 100%;
-  border-radius: 8px;
+  height: 180px;
+  object-fit: cover;
+  background: #111;
+}
+
+/* =====================
+   CONTENT
+   ===================== */
+
+.news-content {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.news-card h3 {
+  font-size: 15px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.news-card p {
+  font-size: 13px;
+  color: #bcbcbc;
+  margin-bottom: 12px;
+  flex-grow: 1;
+}
+
+/* =====================
+   META
+   ===================== */
+
+.news-meta {
+  font-size: 11px;
+  color: #888;
+  display: flex;
+  gap: 6px;
   margin-bottom: 10px;
+}
+
+/* =====================
+   ACTIONS
+   ===================== */
+
+.news-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.read-more {
+  font-size: 13px;
+  color: #00ff77;
+  text-decoration: none;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+
+.share-buttons button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #888;
+  margin-left: 6px;
+  transition: color 0.2s ease;
+}
+
+.share-buttons button:hover {
+  color: #00ff77;
+}
+
+/* =====================
+   SEARCH SUGGESTIONS
+   ===================== */
+
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 6px;
+  z-index: 10;
+}
+
+.suggestion {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #ccc;
+}
+
+.suggestion:hover {
+  background: rgba(0, 255, 119, 0.1);
+  color: #00ff77;
+}
+
+/* =====================
+   SKELETON
+   ===================== */
+
+.skeleton-card {
+  padding: 14px;
+}
+
+.skeleton-img {
+  height: 180px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  background: linear-gradient(
+    90deg,
+    #1a1a1a 25%,
+    #2a2a2a 37%,
+    #1a1a1a 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s infinite;
+}
+
+.skeleton-line {
+  height: 14px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    #1a1a1a 25%,
+    #2a2a2a 37%,
+    #1a1a1a 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s infinite;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }
