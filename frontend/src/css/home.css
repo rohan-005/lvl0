@@ -24,6 +24,7 @@ body {
   background-size: cover;
   color: var(--text-main);
   font-family: "Space Grotesk", sans-serif;
+  /* width: 100%; */
 }
 
 /* ================= LOGO ================= */

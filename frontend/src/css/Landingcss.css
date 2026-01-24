@@ -9,7 +9,7 @@
 
 html,
 body {
-  width: 100vw;
+  /* width: 100%; */
   /* Default to hidden on desktop to keep your "App" feel */
   height: 100vh;
   /* overflow: hidden;  */

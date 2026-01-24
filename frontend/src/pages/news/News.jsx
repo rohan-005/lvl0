@@ -1,23 +1,47 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-import { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState, useMemo } from "react";
 import { getNews } from "../../utils/newsApi";
 import { getNewsImage } from "../../utils/newsImage";
+import StaggeredMenu from "../../ui_components/StaggeredMenu";
 import "../../css/news.css";
 
-const SUGGESTIONS = [
-  "Unity",
-  "Unreal Engine",
-  "Game Development",
-  "Indie Games",
+/* =====================
+   NAVBAR CONFIG
+   ===================== */
+const menuItems = [
+  { label: "Home", ariaLabel: "Go to home page", link: "/home" },
+  { label: "News", ariaLabel: "Learn about us", link: "/news" },
+  { label: "Communities", ariaLabel: "View our services", link: "/services" },
+  { label: "Games Data", ariaLabel: "Get in touch", link: "/contact" },
+  { label: "Profile", ariaLabel: "Get in touch", link: "/profile" },
+];
+
+const socialItems = [
+  { label: "Twitter", link: "https://twitter.com" },
+  { label: "GitHub", link: "https://github.com" },
+  { label: "LinkedIn", link: "https://linkedin.com" },
+];
+
+/* =====================
+   QUICK FILTER TAGS
+   ===================== */
+const QUICK_TAGS = [
+  "All",
+  "RPG",
+  "FPS",
+  "Indie",
+  "Unreal Engine 5",
   "Esports",
-  "Open Source",
-  "Programming",
-  "AI in Games",
+  "Nintendo",
+  "PlayStation",
+  "Xbox",
+  "VR",
+  "Tech",
 ];
 
 const NewsSkeleton = () => (
   <div className="news-grid">
-    {Array.from({ length: 6 }).map((_, i) => (
+    {Array.from({ length: 50 }).map((_, i) => (
       <div key={i} className="news-card skeleton-card">
         <div className="skeleton-img"></div>
         <div className="skeleton-line"></div>
@@ -30,13 +54,27 @@ const NewsSkeleton = () => (
 const News = () => {
   const [articles, setArticles] = useState([]);
   const [query, setQuery] = useState("");
+  const [activeTag, setActiveTag] = useState("All");
   const [loading, setLoading] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [viewMode, setViewMode] = useState("grid");
+  const [showSavedOnly, setShowSavedOnly] = useState(false);
 
-  const fetchNews = async (searchQuery = query) => {
+  const [savedIds, setSavedIds] = useState(() => {
+    const saved = localStorage.getItem("gamingNews_saved");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  /* =====================
+     FETCH NEWS
+     ===================== */
+  const fetchNews = async (searchQuery = "Gaming") => {
     setLoading(true);
-    const data = await getNews(searchQuery, 50);
-    setArticles(data);
+    try {
+      const data = await getNews(searchQuery, 30);
+      setArticles(data || []);
+    } catch (err) {
+      console.error("Failed to fetch news", err);
+    }
     setLoading(false);
   };
 
@@ -44,127 +82,183 @@ const News = () => {
     fetchNews();
   }, []);
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      fetchNews();
-      setShowSuggestions(false);
+  /* =====================
+     FILTERED ARTICLES
+     ===================== */
+  const displayedArticles = useMemo(() => {
+    if (showSavedOnly) {
+      return articles.filter((a) => savedIds.includes(a.url));
     }
+    return articles;
+  }, [articles, savedIds, showSavedOnly]);
+
+  /* =====================
+     ACTION HANDLERS
+     ===================== */
+  const handleTagClick = (tag) => {
+    setActiveTag(tag);
+    setShowSavedOnly(false);
+    if (tag === "All") {
+      fetchNews("Gaming");
+      setQuery("");
+    } else {
+      fetchNews(tag);
+      setQuery(tag);
+    }
+  };
+
+  const handleSearch = () => {
+    if (!query.trim()) return;
+    setActiveTag("Custom");
+    fetchNews(query);
+  };
+
+  const toggleSave = (url) => {
+    const updated = savedIds.includes(url)
+      ? savedIds.filter((id) => id !== url)
+      : [...savedIds, url];
+
+    setSavedIds(updated);
+    localStorage.setItem("gamingNews_saved", JSON.stringify(updated));
   };
 
   const shareArticle = (url, type) => {
     if (type === "copy") {
       navigator.clipboard.writeText(url);
       alert("Link copied!");
-    }
-
-    if (type === "twitter") {
-      window.open(
-        `https://twitter.com/intent/tweet?url=${url}`,
-        "_blank"
-      );
-    }
-
-    if (type === "whatsapp") {
-      window.open(
-        `https://wa.me/?text=${url}`,
-        "_blank"
-      );
+    } else if (type === "twitter") {
+      window.open(`https://twitter.com/intent/tweet?url=${url}`, "_blank");
     }
   };
 
   return (
-    <div className="news-page">
-      <h1>🎮 Gaming & Dev News</h1>
+    <>
+      {/* =====================
+          NEWS PAGE CONTENT
+         ===================== */}
+      <div className="news-page">
+        <div className="navbar-wrapper text-[1.5rem]">
+          <StaggeredMenu items={menuItems} socialItems={socialItems} />
+        </div>
+        <div className="news-header">
+          <div className="lvl0-logo">
+            lvl<span className="underscore">_</span>0
+          </div>
 
-      {/* SEARCH */}
-      <div className="news-search">
-        <input
-          type="text"
-          placeholder="Search gaming, dev, engines, communities..."
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setShowSuggestions(true);
-          }}
-          onKeyDown={handleKeyDown}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-          onFocus={() => setShowSuggestions(true)}
-        />
+          <div className="view-controls">
+            <button
+              className={`control-btn ${showSavedOnly ? "active" : ""}`}
+              onClick={() => setShowSavedOnly(!showSavedOnly)}
+            >
+              ♥ Saved ({savedIds.length})
+            </button>
 
-        <button onClick={() => fetchNews()}>Search</button>
+            <div className="divider"></div>
 
-        {showSuggestions && query.length === 0 && (
-          <div className="search-suggestions">
-            {SUGGESTIONS.map((s) => (
-              <div
-                key={s}
-                className="suggestion"
-                onClick={() => {
-                  setQuery(s);
-                  fetchNews(s);
-                  setShowSuggestions(false);
-                }}
+            <button
+              className={`control-btn ${viewMode === "grid" ? "active" : ""}`}
+              onClick={() => setViewMode("grid")}
+            >
+              ⊞
+            </button>
+
+            <button
+              className={`control-btn ${viewMode === "list" ? "active" : ""}`}
+              onClick={() => setViewMode("list")}
+            >
+              ☰
+            </button>
+          </div>
+        </div>
+
+        {/* SEARCH */}
+        <div className="news-search-container">
+          <div className="news-search">
+            <input
+              type="text"
+              placeholder="Search the metaverse..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            />
+            <button onClick={handleSearch}>🔍</button>
+          </div>
+
+          <div className="tags-scroller">
+            {QUICK_TAGS.map((tag) => (
+              <button
+                key={tag}
+                className={`tag-chip ${activeTag === tag ? "active" : ""}`}
+                onClick={() => handleTagClick(tag)}
               >
-                {s}
-              </div>
+                {tag}
+              </button>
             ))}
+          </div>
+        </div>
+
+        {/* CONTENT */}
+        {loading ? (
+          <NewsSkeleton />
+        ) : (
+          <div
+            className={`news-grid ${viewMode === "list" ? "list-view" : ""}`}
+          >
+            {displayedArticles.map((n, i) => {
+              const isSaved = savedIds.includes(n.url);
+              return (
+                <div key={i} className="news-card">
+                  <div className="card-image-wrapper">
+                    <img
+                      src={getNewsImage(n.urlToImage)}
+                      alt={n.title}
+                      className="news-image"
+                    />
+                  </div>
+
+                  <div className="news-content">
+                    <div className="news-header-row">
+                      <span className="news-date">
+                        {new Date(n.publishedAt).toLocaleDateString()}
+                      </span>
+                      <button
+                        className={`save-btn ${isSaved ? "saved" : ""}`}
+                        onClick={() => toggleSave(n.url)}
+                      >
+                        {isSaved ? "♥" : "♡"}
+                      </button>
+                    </div>
+
+                    <h3>{n.title}</h3>
+                    {viewMode === "list" && <p>{n.description}</p>}
+
+                    <div className="news-actions">
+                      <a
+                        href={n.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="read-btn"
+                      >
+                        Read
+                      </a>
+
+                      <div className="share-row">
+                        <button onClick={() => shareArticle(n.url, "copy")}>
+                          🔗
+                        </button>
+                        <button onClick={() => shareArticle(n.url, "twitter")}>
+                          🐦
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
-
-      {/* CONTENT */}
-      {loading ? (
-        <NewsSkeleton />
-      ) : (
-        <div className="news-grid">
-          {articles.map((n, i) => (
-            <div key={i} className="news-card">
-              <img
-                src={getNewsImage(n.urlToImage)}
-                alt=""
-                className="news-image"
-              />
-
-              <div className="news-content">
-                <h3>{n.title}</h3>
-                <p>{n.description}</p>
-
-                <div className="news-meta">
-                  <span>{n.source?.name}</span>
-                  <span>•</span>
-                  <span>
-                    {new Date(n.publishedAt).toLocaleDateString()}
-                  </span>
-                </div>
-
-                <div className="news-actions">
-                  <a
-                    href={n.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="read-more"
-                  >
-                    Read →
-                  </a>
-
-                  <div className="share-buttons">
-                    <button onClick={() => shareArticle(n.url, "copy")}>
-                      📋
-                    </button>
-                    <button onClick={() => shareArticle(n.url, "twitter")}>
-                      🐦
-                    </button>
-                    <button onClick={() => shareArticle(n.url, "whatsapp")}>
-                      💬
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 
