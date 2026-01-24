@@ -9,6 +9,7 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import './App.css'
+import News from "./pages/news/News";
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/news" element={<News />} />
+
         </Routes>
       </Router>
     </AuthProvider>

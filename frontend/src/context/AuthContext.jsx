@@ -14,6 +14,7 @@ export const useAuth = () => {
   return ctx;
 };
 
+
 /* =========================
    PROVIDER
    ========================= */
@@ -34,14 +35,6 @@ export const AuthProvider = ({ children }) => {
 
     setLoading(false);
   }, []);
-
-  /* =========================
-     CENTRAL USER SYNC (CRITICAL)
-     ========================= */
-  const updateUser = (updatedUser) => {
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-  };
 
   /* =========================
      LOGIN
@@ -155,22 +148,13 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
-
-    // auth
     login,
     register,
     logout,
-
-    // password
     forgotPassword,
     verifyPasswordResetOTP,
     resetPassword,
     resendPasswordResetOTP,
-
-    // identity (IMPORTANT)
-    updateUser,
-
-    // utils
     getAccountType: () => localStorage.getItem("accountType"),
   };
 

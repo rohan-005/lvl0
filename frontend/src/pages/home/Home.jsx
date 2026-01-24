@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../css/home.css";
 import Button from "../../ui_components/Button";
+import HomeNews from "./HomeNews";
 
 
 const Home = () => {
@@ -33,26 +34,7 @@ const Home = () => {
     "Leaderboard",
   ];
 
-  const newsFeed = [
-    {
-      id: 1,
-      title: "Cyberpunk 2 Pre-Production",
-      desc: "CDPR confirms Unreal Engine 5 pipeline.",
-      tag: "NEWS",
-    },
-    {
-      id: 2,
-      title: "Indie Gems 2026",
-      desc: "Small studios redefining creativity.",
-      tag: "INDIE",
-    },
-    {
-      id: 3,
-      title: "RTX 6090 Review",
-      desc: "Performance leap or marketing hype?",
-      tag: "TECH",
-    },
-  ];
+  
 
   const featuredGames = [
     { id: 1, name: "Echoes of Eleria", genre: "Adventure" },
@@ -255,16 +237,7 @@ const Home = () => {
             <div className="divider"></div>
           </div>
 
-          {newsFeed.map((news) => (
-            <div key={news.id} className="glass-panel news-card">
-              <div className="news-header">
-                <h3>{news.title}</h3>
-                <span className="tag">{news.tag}</span>
-              </div>
-
-              <p className="dim-text">{news.desc}</p>
-            </div>
-          ))}
+          <HomeNews/>
 
           <div className="section-header" style={{ marginTop: "32px" }}>
             <h2 className="section-title">FEATURED_GAMES</h2>

@@ -1,0 +1,34 @@
+.news-page {
+  padding: 30px;
+}
+
+.news-search {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.news-search input {
+  flex: 1;
+  padding: 10px;
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.news-card {
+  background: #111;
+  border-radius: 10px;
+  padding: 15px;
+  text-decoration: none;
+  color: white;
+}
+
+.news-card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}

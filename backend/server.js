@@ -11,6 +11,9 @@ const app = express();
 // Import routes
 const authRoutes = require('./routes/auth');
 const otpRoutes = require('./routes/otp');
+const newsRoutes = require("./routes/newsRoutes");
+
+
 
 
 // Connect to database
@@ -30,7 +33,7 @@ app.use(express.json());
 // -------------------- API ROUTES --------------------
 app.use('/api/auth', authRoutes);
 app.use('/api/otp', otpRoutes);
-
+app.use("/api/news", newsRoutes);
 
 // -------------------- HEALTH CHECK --------------------
 app.get('/api/health', (req, res) => {
