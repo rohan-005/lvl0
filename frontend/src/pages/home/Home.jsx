@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "../../css/home.css";
 import Button from "../../ui_components/Button";
 import HomeNews from "./HomeNews";
-
+import { fetchTrendingGames } from "../../utils/gamesApi";
+import StaggeredMenu from "../../ui_components/StaggeredMenu";
 
 const Home = () => {
   /* =====================
@@ -12,7 +13,24 @@ const Home = () => {
   const [user, setUser] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [showMobileProfile, setShowMobileProfile] = useState(false);
+  const [trendingGames, setTrendingGames] = useState([]);
+  const [loadingGames, setLoadingGames] = useState(true);
+
   const navigate = useNavigate();
+
+  const menuItems = [
+    { label: "Home", ariaLabel: "Go to home page", link: "/home" },
+    { label: "News", ariaLabel: "Go to news page", link: "/news" },
+    { label: "Communities", ariaLabel: "View communities", link: "/services" },
+    { label: "Games Data", ariaLabel: "View games data", link: "/games" },
+    { label: "Profile", ariaLabel: "View profile", link: "/profile" },
+  ];
+
+  const socialItems = [
+    { label: "Twitter", link: "https://twitter.com" },
+    { label: "GitHub", link: "https://github.com" },
+    { label: "LinkedIn", link: "https://linkedin.com" },
+  ];
 
   const guestUser = {
     name: "Guest",
@@ -34,13 +52,6 @@ const Home = () => {
     "Leaderboard",
   ];
 
-  
-
-  const featuredGames = [
-    { id: 1, name: "Echoes of Eleria", genre: "Adventure" },
-    { id: 2, name: "Fractured Realms", genre: "RPG" },
-  ];
-
   const trendingGenres = ["RPG", "FPS", "INDIE", "SIM", "HORROR"];
   const activeDiscussions = [
     "Best Soulslike combat?",
@@ -57,6 +68,12 @@ const Home = () => {
 
     return `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
   };
+  //games
+  useEffect(() => {
+    fetchTrendingGames()
+      .then((res) => setTrendingGames(res.data.results))
+      .finally(() => setLoadingGames(false));
+  }, []);
 
   /* =====================
      AUTH
@@ -105,6 +122,8 @@ const Home = () => {
      ===================== */
   return (
     <div className="dashboard-root">
+      <StaggeredMenu items={menuItems} socialItems={socialItems} />
+
       {/* HEADER */}
       <header className="dashboard-header">
         <div className="lvl0-logo">
@@ -155,7 +174,8 @@ const Home = () => {
                 ) : (
                   <>
                     <p className="user-role">
-                      class: {user.accountType === "developer" ? "DEVELOPER" : "GAMER"}
+                      class:{" "}
+                      {user.accountType === "developer" ? "DEVELOPER" : "GAMER"}
                     </p>
 
                     {!user.isVerified && (
@@ -165,9 +185,7 @@ const Home = () => {
                     <Button onClick={() => navigate("/profile")}>
                       PROFILE
                     </Button>
-                    <Button onClick={() => navigate("/auth")}>
-                      LOGOUT
-                    </Button>
+                    <Button onClick={() => navigate("/auth")}>LOGOUT</Button>
                   </>
                 )}
               </div>
@@ -199,9 +217,7 @@ const Home = () => {
                   <>
                     <p className="user-role">
                       class:{" "}
-                      {user.accountType === "developer"
-                        ? "DEVELOPER"
-                        : "GAMER"}
+                      {user.accountType === "developer" ? "DEVELOPER" : "GAMER"}
                     </p>
 
                     {!user.isVerified && (
@@ -211,9 +227,7 @@ const Home = () => {
                     <Button onClick={() => navigate("/profile")}>
                       PROFILE
                     </Button>
-                    <Button onClick={() => navigate("/auth")}>
-                      LOGOUT
-                    </Button>
+                    <Button onClick={() => navigate("/auth")}>LOGOUT</Button>
                   </>
                 )}
               </div>
@@ -237,7 +251,7 @@ const Home = () => {
             <div className="divider"></div>
           </div>
 
-          <HomeNews/>
+          <HomeNews />
 
           <div className="section-header" style={{ marginTop: "32px" }}>
             <h2 className="section-title">FEATURED_GAMES</h2>
@@ -245,12 +259,25 @@ const Home = () => {
           </div>
 
           <div className="games-grid">
-            {featuredGames.map((game) => (
-              <div key={game.id} className="glass-panel game-card">
-                <h4>{game.name}</h4>
-                <p className="dim-text genre">{game.genre}</p>
-              </div>
-            ))}
+            {loadingGames
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="glass-panel game-card skeleton-card"
+                  />
+                ))
+              : trendingGames.map((game) => (
+                  <div
+                    key={game.id}
+                    className="glass-panel game-card clickable"
+                    onClick={() => navigate(`/games/${game.id}`)}
+                  >
+                    <h4>{game.name}</h4>
+                    <p className="dim-text">
+                      ⭐ {game.rating} · 🎮 {game.playtime}h
+                    </p>
+                  </div>
+                ))}
           </div>
         </main>
 

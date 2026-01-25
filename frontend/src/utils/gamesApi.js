@@ -11,3 +11,14 @@ export const fetchGameScreenshots = (id) =>
 
 export const fetchGameStores = (id) =>
   axios.get(`/games/${id}/stores`);
+
+/* 🔥 Trending = ordering by popularity */
+export const fetchTrendingGames = () =>
+  axios.get("/games", {
+    params: {
+      ordering: "-added",
+      page_size: 10,
+    },
+  });
+export const fetchSimilarGames = (id) =>
+  axios.get(`/games/${id}/similar`);
