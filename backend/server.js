@@ -12,6 +12,7 @@ const app = express();
 const authRoutes = require('./routes/auth');
 const otpRoutes = require('./routes/otp');
 const newsRoutes = require("./routes/newsRoutes");
+const games = require("./routes/games");
 
 
 
@@ -34,6 +35,8 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/otp', otpRoutes);
 app.use("/api/news", newsRoutes);
+app.use("/api/games", games);
+
 
 // -------------------- HEALTH CHECK --------------------
 app.get('/api/health', (req, res) => {

@@ -8,8 +8,10 @@ import OTPVerification from "./pages/auth/OTPVerification";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
-import './App.css'
+import "./App.css";
 import News from "./pages/news/News";
+import Games from "./pages/games/Games";
+import GameDetails from "./pages/games/GamesDetails";
 
 function App() {
   return (
@@ -33,7 +35,8 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/news" element={<News />} />
-
+          <Route path="/games" element={<Games />} />
+          <Route path="/games/:id" element={<GameDetails />} />
         </Routes>
       </Router>
     </AuthProvider>
