@@ -10,10 +10,10 @@ import "../../css/news.css";
    ===================== */
 const menuItems = [
   { label: "Home", ariaLabel: "Go to home page", link: "/home" },
-  { label: "News", ariaLabel: "Learn about us", link: "/news" },
-  { label: "Communities", ariaLabel: "View our services", link: "/services" },
-  { label: "Games Data", ariaLabel: "Get in touch", link: "/contact" },
-  { label: "Profile", ariaLabel: "Get in touch", link: "/profile" },
+  { label: "News", ariaLabel: "Go to news page", link: "/news" },
+  { label: "Communities", ariaLabel: "View communities", link: "/services" },
+  { label: "Games Data", ariaLabel: "View games data", link: "/contact" },
+  { label: "Profile", ariaLabel: "View profile", link: "/profile" },
 ];
 
 const socialItems = [
@@ -39,9 +39,12 @@ const QUICK_TAGS = [
   "Tech",
 ];
 
+/* =====================
+   SKELETON
+   ===================== */
 const NewsSkeleton = () => (
   <div className="news-grid">
-    {Array.from({ length: 50 }).map((_, i) => (
+    {Array.from({ length: 12 }).map((_, i) => (
       <div key={i} className="news-card skeleton-card">
         <div className="skeleton-img"></div>
         <div className="skeleton-line"></div>
@@ -59,19 +62,24 @@ const News = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [showSavedOnly, setShowSavedOnly] = useState(false);
 
+  /* Load More */
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  /* Saved articles */
   const [savedIds, setSavedIds] = useState(() => {
     const saved = localStorage.getItem("gamingNews_saved");
     return saved ? JSON.parse(saved) : [];
   });
 
   /* =====================
-     FETCH NEWS
+     FETCH NEWS (ONCE)
      ===================== */
   const fetchNews = async (searchQuery = "Gaming") => {
     setLoading(true);
     try {
-      const data = await getNews(searchQuery, 30);
+      const data = await getNews(searchQuery, 70);
       setArticles(data || []);
+      setVisibleCount(12); // reset on new search/tag
     } catch (err) {
       console.error("Failed to fetch news", err);
     }
@@ -83,14 +91,17 @@ const News = () => {
   }, []);
 
   /* =====================
-     FILTERED ARTICLES
+     FILTER + PAGINATION
      ===================== */
-  const displayedArticles = useMemo(() => {
-    if (showSavedOnly) {
-      return articles.filter((a) => savedIds.includes(a.url));
-    }
-    return articles;
+  const filteredArticles = useMemo(() => {
+    return showSavedOnly
+      ? articles.filter((a) => savedIds.includes(a.url))
+      : articles;
   }, [articles, savedIds, showSavedOnly]);
+
+  const displayedArticles = useMemo(() => {
+    return filteredArticles.slice(0, visibleCount);
+  }, [filteredArticles, visibleCount]);
 
   /* =====================
      ACTION HANDLERS
@@ -98,18 +109,20 @@ const News = () => {
   const handleTagClick = (tag) => {
     setActiveTag(tag);
     setShowSavedOnly(false);
+
     if (tag === "All") {
-      fetchNews("Gaming");
       setQuery("");
+      fetchNews("Gaming");
     } else {
-      fetchNews(tag);
       setQuery(tag);
+      fetchNews(tag);
     }
   };
 
   const handleSearch = () => {
     if (!query.trim()) return;
     setActiveTag("Custom");
+    setShowSavedOnly(false);
     fetchNews(query);
   };
 
@@ -133,13 +146,11 @@ const News = () => {
 
   return (
     <>
-      {/* =====================
-          NEWS PAGE CONTENT
-         ===================== */}
+      {/* MENU (mounted once, overlay-safe) */}
+      <StaggeredMenu items={menuItems} socialItems={socialItems} />
+
       <div className="news-page">
-        <div className="navbar-wrapper text-[1.5rem]">
-          <StaggeredMenu items={menuItems} socialItems={socialItems} />
-        </div>
+        {/* HEADER */}
         <div className="news-header">
           <div className="lvl0-logo">
             lvl<span className="underscore">_</span>0
@@ -201,61 +212,86 @@ const News = () => {
         {loading ? (
           <NewsSkeleton />
         ) : (
-          <div
-            className={`news-grid ${viewMode === "list" ? "list-view" : ""}`}
-          >
-            {displayedArticles.map((n, i) => {
-              const isSaved = savedIds.includes(n.url);
-              return (
-                <div key={i} className="news-card">
-                  <div className="card-image-wrapper">
-                    <img
-                      src={getNewsImage(n.urlToImage)}
-                      alt={n.title}
-                      className="news-image"
-                    />
-                  </div>
+          <>
+            <div
+              className={`news-grid ${
+                viewMode === "list" ? "list-view" : ""
+              }`}
+            >
+              {displayedArticles.map((n, i) => {
+                const isSaved = savedIds.includes(n.url);
 
-                  <div className="news-content">
-                    <div className="news-header-row">
-                      <span className="news-date">
-                        {new Date(n.publishedAt).toLocaleDateString()}
-                      </span>
-                      <button
-                        className={`save-btn ${isSaved ? "saved" : ""}`}
-                        onClick={() => toggleSave(n.url)}
-                      >
-                        {isSaved ? "♥" : "♡"}
-                      </button>
+                return (
+                  <div key={i} className="news-card">
+                    <div className="card-image-wrapper">
+                      <img
+                        src={getNewsImage(n.urlToImage)}
+                        alt={n.title}
+                        className="news-image"
+                        loading="lazy"
+                      />
                     </div>
 
-                    <h3>{n.title}</h3>
-                    {viewMode === "list" && <p>{n.description}</p>}
+                    <div className="news-content">
+                      <div className="news-header-row">
+                        <span className="news-date">
+                          {new Date(n.publishedAt).toLocaleDateString()}
+                        </span>
 
-                    <div className="news-actions">
-                      <a
-                        href={n.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="read-btn"
-                      >
-                        Read
-                      </a>
+                        <button
+                          className={`save-btn ${isSaved ? "saved" : ""}`}
+                          onClick={() => toggleSave(n.url)}
+                        >
+                          {isSaved ? "♥" : "♡"}
+                        </button>
+                      </div>
 
-                      <div className="share-row">
-                        <button onClick={() => shareArticle(n.url, "copy")}>
-                          🔗
-                        </button>
-                        <button onClick={() => shareArticle(n.url, "twitter")}>
-                          🐦
-                        </button>
+                      <h3>{n.title}</h3>
+                      {viewMode === "list" && <p>{n.description}</p>}
+
+                      <div className="news-actions">
+                        <a
+                          href={n.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="read-btn"
+                        >
+                          Read
+                        </a>
+
+                        <div className="share-row">
+                          <button
+                            onClick={() => shareArticle(n.url, "copy")}
+                          >
+                            🔗
+                          </button>
+                          <button
+                            onClick={() => shareArticle(n.url, "twitter")}
+                          >
+                            🐦
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+
+            {/* LOAD MORE */}
+            {visibleCount < filteredArticles.length && (
+              <div className="load-more-wrapper">
+                <button
+                  className="load-more-btn"
+                  onClick={() =>
+                    setVisibleCount((prev) => prev + 12)
+                  }
+                >
+                  Load More
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </>
