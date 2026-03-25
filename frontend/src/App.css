@@ -22,7 +22,7 @@
   --accent-soft:     rgba(208, 39, 82, 0.60);
 
   /* — Backgrounds — */
-  --bg-main:         #000f08;
+  --bg-main:         radial-gradient(circle at center right, rgba(120, 5, 24, 0.856), rgb(0, 0, 0), var(--bg-dark));
   --bg-card:         rgba(5, 9, 16, 0.95);
   --bg-glass:        rgba(61, 62, 63, 0.8);
   --bg-input:        rgba(255, 255, 255, 0.04);
@@ -42,3 +42,4 @@
   --success:         #00c97b;
   --warning:         #ffb703;
 }
+

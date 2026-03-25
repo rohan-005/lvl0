@@ -19,7 +19,6 @@ const logoVariants = {
     x: "-50%",
     y: "-50%",
     scale: 1.6,
-    opacity: 1,
   },
   end: {
     top: "32px",
@@ -27,78 +26,66 @@ const logoVariants = {
     x: 0,
     y: 0,
     scale: 0.85,
-    transition: { duration: 2, ease: [0.77, 0, 0.175, 1] },
+    transition: { duration: 1.5 },
   },
 };
 
-const contentVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 1 } },
-};
-
-const cardVariants = {
-  initial: { opacity: 0, y: 30, rotate: 0 },
-  enter: (rotate) => ({
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  show: (delay = 0) => ({
     opacity: 1,
     y: 0,
-    rotate,
-    transition: {
-      delay: 0.6,
-      duration: 1.2,
-      ease: [0.22, 1, 0.36, 1],
-    },
+    transition: { delay, duration: 0.8 },
   }),
 };
 
-/* Cards */
+/* SCATTERED POSITIONS */
+const positions = [
+  "top-[10%] left-[55%]",
+  "top-[20%] left-[75%]",
+  "top-[45%] left-[60%]",
+  "top-[55%] left-[80%]",
+  "top-[70%] left-[55%]",
+  "top-[75%] left-[75%]",
+];
+
+/* CARDS */
 const cards = [
   {
     title: "Genres",
-    sub: "Playstyle discovery",
-    desc: "Browse games by mechanics and genres.",
+    desc: "Explore playstyles",
+    points: ["FPS / RPG / Strategy", "Smart filters"],
     color: "#00ff77",
-    pos: "top-[6%] left-[10%]",
-    rot: -6,
   },
   {
-    title: "In-House Games",
-    sub: "Original content",
-    desc: "Exclusive games built by lvl_0.",
+    title: "Games",
+    desc: "Original lvl0 titles",
+    points: ["Indie builds", "Frequent updates"],
     color: "#7cffc4",
-    pos: "top-[10%] left-[45%]",
-    rot: 6,
   },
   {
     title: "Stats",
-    sub: "Insights & metrics",
-    desc: "Track trends and performance.",
+    desc: "Track performance",
+    points: ["Win rate", "Insights"],
     color: "#6affff",
-    pos: "top-[4%] left-[70%]",
-    rot: 10,
-  },
-  {
-    title: "News",
-    sub: "Verified updates",
-    desc: "Curated gaming news.",
-    color: "#9dff8f",
-    pos: "top-[42%] left-[20%]",
-    rot: -8,
   },
   {
     title: "Communities",
-    sub: "Genre discussions",
-    desc: "Focused gaming communities.",
-    color: "#8fffce",
-    pos: "top-[45%] left-[50%]",
-    rot: 4,
+    desc: "Join players",
+    points: ["Discussions", "Niche groups"],
+    color: "#9dff8f",
   },
   {
     title: "Leaderboards",
-    sub: "Global rankings",
-    desc: "Compete with players worldwide.",
+    desc: "Global ranking",
+    points: ["Skill based", "Seasonal"],
     color: "#b6ff9a",
-    pos: "top-[40%] left-[75%]",
-    rot: 8,
+  },
+  {
+    title: "News",
+    desc: "Stay updated",
+    points: ["Curated", "No noise"],
+    color: "#8fffce",
   },
 ];
 
@@ -119,64 +106,86 @@ const Landing = () => {
         lvl<span className="underscore">_</span>0
       </motion.div>
 
-      {/* LEFT CONTENT */}
+      {/* HERO */}
       {show && (
-        <motion.div
-          className="left-content"
-          variants={contentVariants}
-          initial="hidden"
-          animate="show"
-        >
-          <p className="headline">A unified gaming ecosystem.</p>
+        <div className="hero">
+          <motion.h1 initial="hidden" animate="show" variants={fadeUp}>
+            The Operating System
+            <br />
+            for Gamers
+          </motion.h1>
 
-          <p className="vision-text">
-            Discover <span>genre-focused communities</span>, curated
-            <span> gaming news</span>, detailed <span>game data</span>, and
-            performance <span>statistics</span> — with original
-            <span> in-house games</span>.
-          </p>
+          <motion.p
+            className="hero-sub"
+            initial="hidden"
+            animate="show"
+            variants={fadeUp}
+            custom={0.2}
+          >
+            Communities, stats, games, and insights — all unified.
+          </motion.p>
 
-          <p className="tech-line">
-            Built on the <code>MERN</code> stack. Designed to scale.
-          </p>
-
-          <div className="auth-buttons">
+          <motion.div
+            className="auth-buttons"
+            initial="hidden"
+            animate="show"
+            variants={fadeUp}
+            custom={0.4}
+          >
             <Buttons variant="primary" onClick={() => navigate("/auth")}>
-              Login
+              Get Started
             </Buttons>
 
             <Buttons variant="secondary" onClick={() => navigate("/auth")}>
-              Register
+              Explore
             </Buttons>
-          </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* EXTRA CONTENT SECTION */}
+      {show && (
+        <motion.div
+          className="info-strip"
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          custom={0.6}
+        >
+          <span>Built for gamers</span>
+          <span>Powered by MERN</span>
+          <span>Scalable architecture</span>
         </motion.div>
       )}
 
       {/* CARDS */}
       {show && (
-        <div className="cards-layer">
-          <DraggableCardContainer className="cards-container">
-            {cards.map((c, i) => (
-              <motion.div
-                key={i}
-                className={`card-wrapper ${c.pos}`}
-                variants={cardVariants}
-                initial="initial"
-                animate="enter"
-                custom={c.rot}
+        <DraggableCardContainer className="cards-layer">
+          {cards.map((c, i) => (
+            <motion.div
+              key={i}
+              className={`card-wrapper ${positions[i]}`}
+              initial="hidden"
+              animate="show"
+              variants={fadeUp}
+              custom={0.5 + i * 0.1}
+            >
+              <DraggableCardBody
+                className="text-card"
+                style={{ borderColor: c.color }}
               >
-                <DraggableCardBody
-                  className="text-card"
-                  style={{ borderColor: c.color }}
-                >
-                  <h3 style={{ color: c.color }}>{c.title}</h3>
-                  <span className="card-sub">{c.sub}</span>
-                  <p>{c.desc}</p>
-                </DraggableCardBody>
-              </motion.div>
-            ))}
-          </DraggableCardContainer>
-        </div>
+                <h3 style={{ color: c.color }}>{c.title}</h3>
+                <p className="card-desc">{c.desc}</p>
+
+                <ul className="card-points">
+                  {c.points.map((p, idx) => (
+                    <li key={idx}>{p}</li>
+                  ))}
+                </ul>
+              </DraggableCardBody>
+            </motion.div>
+          ))}
+        </DraggableCardContainer>
       )}
     </div>
   );
