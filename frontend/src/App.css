@@ -1,1 +1,44 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+/* ============================================================
+   LVL0 — GLOBAL THEME
+   Primary Palette:
+     --accent:       #F63049  (vivid crimson red)
+     --accent-dark:  #D02752  (deep rose)
+     --accent-shade: #8A244B  (muted burgundy)
+     --bg-dark:      #111F35  (dark navy background)
+   ============================================================ */
+
+:root {
+  /* — Brand Colors — */
+  --accent:          #Fb3640;
+  --accent-dark:     #770522;
+  --accent-shade:    #8A244B;
+  --bg-dark:         #03070e;
+
+  /* — Derived / Utility — */
+  --accent-dim:      rgba(246, 48, 73, 0.15);
+  --accent-glow:     rgba(246, 48, 73, 0.30);
+  --accent-soft:     rgba(208, 39, 82, 0.60);
+
+  /* — Backgrounds — */
+  --bg-main:         #000f08;
+  --bg-card:         rgba(5, 9, 16, 0.95);
+  --bg-glass:        rgba(61, 62, 63, 0.8);
+  --bg-input:        rgba(255, 255, 255, 0.04);
+
+  /* — Borders — */
+  --border:          rgba(255, 255, 255, 0.10);
+  --border-accent:   rgba(246, 48, 73, 0.40);
+
+  /* — Text — */
+  --text-main:       #ffffff;
+  --text-dim:        #8da0b8;
+  --text-muted:      #6b7f96;
+  --text-on-accent:  #ffffff;
+
+  /* — Danger / Status — */
+  --danger:          #ff4d6d;
+  --success:         #00c97b;
+  --warning:         #ffb703;
+}

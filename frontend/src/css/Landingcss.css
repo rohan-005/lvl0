@@ -1,5 +1,7 @@
+/* Inherits theme from App.css :root */
+
 /* ============================
-   GLOBAL & DESKTOP (Keep this as is)
+   GLOBAL & DESKTOP
    ============================ */
 * {
   margin: 0;
@@ -9,12 +11,8 @@
 
 html,
 body {
-  /* width: 100%; */
-  /* Default to hidden on desktop to keep your "App" feel */
   height: 100vh;
-  /* overflow: hidden;  */
   background: repeat;
-  /* background: radial-gradient(circle at center right, #013101b4,#264f26b4, #000000); */
   background-attachment: fixed; 
 }
 
@@ -34,9 +32,9 @@ body {
   top: 32px;
   left: 48px;
   font-family: "Orbitron", sans-serif;
-  font-size: clamp(2.5rem, 5vw, 6rem); /* Adjusted for scaling */
+  font-size: clamp(2.5rem, 5vw, 6rem);
   font-weight: 900;
-  color: #00ff77;
+  color: var(--accent);
   z-index: 10;
 }
 
@@ -68,18 +66,18 @@ body {
 }
 
 .vision-text span {
-  color: #8affc1;
+  color: var(--accent);
 }
 
 .tech-line {
   font-family: "JetBrains Mono", monospace;
   font-size: 0.8rem;
-  color: #9a9a9a;
+  color: var(--text-muted);
   margin-bottom: 30px;
 }
 
 .tech-line code {
-  color: #00ff77;
+  color: var(--accent);
 }
 
 /* BUTTONS */
@@ -98,14 +96,14 @@ body {
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, #8affc1, #5fffd2);
-  color: #000;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: white;
 }
 
 .btn.secondary {
   background: transparent;
-  color: #8affc1;
-  border: 1px solid #8affc1;
+  color: var(--accent);
+  border: 1px solid var(--accent);
 }
 
 /* CARDS LAYER (Desktop Position) */
@@ -126,23 +124,17 @@ body {
   height: 90%;
   display: grid;
   grid-template-columns: repeat(2, minmax(200px, 1fr));
-  /* grid-auto-rows: min-content; */
   padding: 24px;
-  /* On desktop, if cards overflow, scroll inside the container only */
-  /* overflow-y: auto;  */
 }
-/* Hide scrollbar for aesthetics */
-/* .cards-container::-webkit-scrollbar { display: none; } */
 
 /* CARD STYLING */
 .text-card {
   width: 80%;
-  /* Let content decide height, cleaner than fixed min-height */
   height: auto; 
   min-height: 200px;
   margin-bottom: -200px;
-  background: rgba(10, 10, 10, 0.95);
-  border: 1.5px solid #fff;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
   border-radius: 24px;
   padding: 20px;
   display: flex;
@@ -150,6 +142,11 @@ body {
   gap: 10px;
   font-family: "Space Grotesk", sans-serif;
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55);
+  transition: border-color 0.3s ease;
+}
+
+.text-card:hover {
+  border-color: var(--border-accent);
 }
 
 .text-card h3 {
@@ -158,7 +155,7 @@ body {
 
 .card-sub {
   font-size: 1.2rem;
-  color: #aaa;
+  color: var(--accent);
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -178,14 +175,12 @@ body {
   /* 1. ENABLE SCROLLING ON BODY */
   html, body {
     height: 100%;
-    /* min-height: 100%; */
-    overflow-y: auto; /* ALLOW SCROLL */
+    overflow-y: auto;
     overflow-x: hidden;
   }
 
   /* 2. RESET ROOT TO FLOW LAYOUT */
   .landing-root {
-    /* height: auto; */
     overflow: visible;
     display: flex;
     flex-direction: column;
@@ -193,7 +188,6 @@ body {
 
   /* 3. LOGO POSITIONING */
   .lvl0-logo {
-    /* Keep it absolute or relative, but ensure size is manageable */
     top: 24px;
     left: 30px;
     font-size: 5rem;
@@ -201,30 +195,27 @@ body {
 
   /* 4. CONTENT FLOWS NATURALLY */
   .left-content {
-    position: relative; /* No longer absolute */
+    position: relative;
     top: auto;
     left: auto;
     max-width: 100%;
-    margin-top: 150px; /* Space for logo */
+    margin-top: 150px;
     padding: 0 24px;
-    margin-bottom: 40px; /* Space between text and cards */
+    margin-bottom: 40px;
   }
 
   /* 5. CARDS STACK BELOW CONTENT */
   .cards-layer {
-    position: relative; /* No longer absolute */
+    position: relative;
     width: 100%;
     height: 100%;
-    padding: 0px 24px 60px 50px; /* Bottom padding for scroll space */
+    padding: 0px 24px 60px 50px;
   }
 
   .cards-container {
     display: grid;
-    /* Force 1 column on mobile for readability */
     grid-template-columns: 1fr; 
     gap: 200px;
-    /* height: auto; */
-    /* overflow: visible; */
     padding: 0;
   }
   

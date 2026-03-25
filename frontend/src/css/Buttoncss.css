@@ -1,10 +1,4 @@
-:root {
-  --accent: #0ceb53;
-  --accent-soft: #88ff7d;
-  --bg-dark: #898992;
-  --danger: #e63946;
-  --text-light: #060606;
-}
+/* Inherits theme from App.css :root */
 
 /* Base */
 .btn {
@@ -25,22 +19,25 @@
 
 /* Primary */
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-soft));
-  color: var(--text-light);
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: var(--text-on-accent);
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--accent-glow);
 }
 
 /* Secondary */
 .btn-secondary {
-  background: #a4a4a9;
-  color: var(--text-light);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: #232334;
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--text-main);
 }
 
 /* Danger */
@@ -58,6 +55,8 @@
 /* Loading */
 .btn-loading {
   pointer-events: none;
+  position: relative;
+  overflow: hidden;
 }
 
 /* Spinner */
@@ -74,12 +73,6 @@
   to {
     transform: rotate(360deg);
   }
-}
-/* ---------- Loading Layout ---------- */
-.btn-loading {
-  pointer-events: none;
-  position: relative;
-  overflow: hidden;
 }
 
 /* ---------- DOT LOADER ---------- */
@@ -134,7 +127,7 @@
   background: linear-gradient(
     120deg,
     transparent,
-    rgba(255,255,255,0.3),
+    rgba(255,255,255,0.25),
     transparent
   );
   animation: shine 1.4s infinite;

@@ -24,10 +24,9 @@
 }
 
 .profile-title {
-  /* font-family: "Orbitron", sans-serif; */
   font-size: 0.9rem;
   letter-spacing: 2px;
-  color: var(--neon-green);
+  color: var(--accent);
 }
 
 /* LAYOUT */
@@ -49,7 +48,7 @@
 }
 
 .nav-item.active {
-  color: var(--neon-green);
+  color: var(--accent);
 }
 
 /* MAIN */
@@ -63,11 +62,11 @@
 }
 
 .alert.success {
-  color: var(--neon-green);
+  color: var(--success);
 }
 
 .alert.error {
-  color: #ff4d4d;
+  color: var(--danger);
 }
 
 /* FORM */
@@ -85,10 +84,9 @@
 
 .form input {
   background: transparent;
-  border: 1px solid var(--border-dim);
+  border: 1px solid var(--border);
   padding: 10px;
   color: var(--text-main);
-  /* font-family: "JetBrains Mono", monospace; */
 }
 
 .form input:disabled {
@@ -98,16 +96,15 @@
 .form button {
   margin-top: 12px;
   background: transparent;
-  border: 1px solid var(--neon-green);
-  color: var(--neon-green);
+  border: 1px solid var(--accent);
+  color: var(--accent);
   padding: 10px;
-  /* font-family: "Orbitron", sans-serif; */
   cursor: pointer;
 }
 
 .form button:hover {
-  background: var(--neon-green);
-  color: black;
+  background: var(--accent);
+  color: white;
 }
 
 /* MOBILE */
