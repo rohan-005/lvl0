@@ -4,33 +4,17 @@ import "../../css/home.css";
 import Button from "../../ui_components/Button";
 import HomeNews from "./HomeNews";
 import { fetchTrendingGames } from "../../utils/gamesApi";
-import StaggeredMenu from "../../ui_components/StaggeredMenu";
 
+/* ─── Nav icon helpers ─── */
+
+/* ─── Main Component ─── */
 const Home = () => {
-  /* =====================
-     STATE
-     ===================== */
   const [user, setUser] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
-  const [showMobileProfile, setShowMobileProfile] = useState(false);
   const [trendingGames, setTrendingGames] = useState([]);
   const [loadingGames, setLoadingGames] = useState(true);
-
+  // const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
-
-  const menuItems = [
-    { label: "Home", ariaLabel: "Go to home page", link: "/home" },
-    { label: "News", ariaLabel: "Go to news page", link: "/news" },
-    { label: "Communities", ariaLabel: "View communities", link: "/services" },
-    { label: "Games Data", ariaLabel: "View games data", link: "/games" },
-    { label: "Profile", ariaLabel: "View profile", link: "/profile" },
-  ];
-
-  const socialItems = [
-    { label: "Twitter", link: "https://twitter.com" },
-    { label: "GitHub", link: "https://github.com" },
-    { label: "LinkedIn", link: "https://linkedin.com" },
-  ];
 
   const guestUser = {
     name: "Guest",
@@ -40,66 +24,37 @@ const Home = () => {
     isVerified: false,
   };
 
-  /* =====================
-     MOCK DATA
-     ===================== */
-  const exploreLinks = [
-    "Games",
-    "Genres",
-    "Communities",
-    "Dev Labs",
-    "Challenges",
-    "Leaderboard",
-  ];
-
-  const trendingGenres = ["RPG", "FPS", "INDIE", "SIM", "HORROR"];
-  const activeDiscussions = [
-    "Best Soulslike combat?",
-    "Unity vs Unreal 2026",
-    "AI-driven NPC behavior",
-  ];
-
-  const getAvatarUrl = (user) => {
-    const seed = user?.email || user?.name || "guest";
+  const getAvatarUrl = (u) => {
+    const seed = u?.email || u?.name || "guest";
     let style = "identicon";
-
-    if (user?.accountType === "developer") style = "bottts-neutral";
-    else if (user?.accountType === "gamer") style = "pixel-art";
-
+    if (u?.accountType === "developer") style = "bottts-neutral";
+    else if (u?.accountType === "gamer") style = "pixel-art";
     return `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
   };
-  //games
+
   useEffect(() => {
     fetchTrendingGames()
       .then((res) => setTrendingGames(res.data.results))
       .finally(() => setLoadingGames(false));
   }, []);
 
-  /* =====================
-     AUTH
-     ===================== */
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetch_ = async () => {
       try {
         const token = localStorage.getItem("token");
-
         if (!token) {
           setUser(guestUser);
           return;
         }
-
         const res = await fetch("/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         if (!res.ok) {
           localStorage.removeItem("token");
           setUser(guestUser);
           return;
         }
-
         const data = await res.json();
-
         setUser({
           name: data.name,
           email: data.email,
@@ -113,194 +68,193 @@ const Home = () => {
         setLoadingProfile(false);
       }
     };
-
-    fetchProfile();
+    fetch_();
   }, []);
 
-  /* =====================
-     UI
-     ===================== */
-  return (
-    <div className="dashboard-root">
-      <StaggeredMenu items={menuItems} socialItems={socialItems} />
+  const trendingGenres = ["RPG", "FPS", "INDIE", "SIM", "HORROR"];
+  const activeDiscussions = [
+    "Best Soulslike combat?",
+    "Unity vs Unreal 2026",
+    "AI-driven NPC behavior",
+  ];
 
-      {/* HEADER */}
-      <header className="dashboard-header">
-        <div className="lvl0-logo">
-          lvl<span className="underscore">_</span>0
+  return (
+    <div className="hp-root">
+      {/* ── EXPANDABLE SIDEBAR ── */}
+      
+      {/* ── MAIN BODY ── */}
+      <div className={`hp-body`}>
+        {/* ── TOP ROW ── */}
+        <div className="hp-top-row">
+          {/* MAIN FEED — large card */}
+          <section className="hp-card hp-main-feed">
+            <div className="hp-card-header">
+              <div className="hp-section-pills">
+                <span className="hp-pill active">Feed</span>
+                <span className="hp-pill">Trending</span>
+                <span className="hp-pill">New</span>
+                <span className="hp-pill">Following</span>
+              </div>
+            </div>
+
+            <div className="hp-feed-body">
+              <HomeNews />
+            </div>
+
+            <div className="hp-card-footer">
+              <a href="/news" className="hp-view-all">
+                View all news →
+              </a>
+            </div>
+          </section>
+
+          {/* RIGHT PANEL */}
+          <aside className="hp-right-panel">
+            {/* User Identity */}
+            <div className="hp-card hp-identity-card">
+              <h3 className="hp-panel-title">IDENTITY</h3>
+              {loadingProfile ? (
+                <div className="hp-skeleton-row" />
+              ) : (
+                <div className="hp-identity-body">
+                  <div className="hp-identity-row">
+                    <img
+                      src={getAvatarUrl(user)}
+                      alt="avatar"
+                      className="hp-avatar-md"
+                    />
+                    <div className="hp-identity-info">
+                      <p className="hp-user-name">{user?.name}</p>
+                      <p className="hp-user-role">
+                        {user?.role === "guest"
+                          ? "Guest"
+                          : user?.accountType?.toUpperCase()}
+                      </p>
+                      {!user?.isVerified && user?.role !== "guest" && (
+                        <p className="hp-status-warn">⚠ UNVERIFIED</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="hp-identity-actions">
+                    {user?.role === "guest" ? (
+                      <Button onClick={() => navigate("/auth")}>LOGIN</Button>
+                    ) : (
+                      <>
+                        <Button onClick={() => navigate("/profile")}>
+                          PROFILE
+                        </Button>
+                        <Button onClick={() => navigate("/auth")}>
+                          LOGOUT
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Trending Genres */}
+            <div className="hp-card hp-trending-card">
+              <h3 className="hp-panel-title">TRENDING</h3>
+              <div className="hp-genre-list">
+                {trendingGenres.map((g) => (
+                  <span key={g} className="hp-genre-tag">
+                    #{g}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Active Discussions */}
+            <div className="hp-card hp-discussions-card">
+              <h3 className="hp-panel-title">DISCUSSIONS</h3>
+              {activeDiscussions.map((d, i) => (
+                <div key={i} className="hp-discussion-item">
+                  <span className="hp-discussion-arrow">›</span>
+                  <span>{d}</span>
+                </div>
+              ))}
+            </div>
+          </aside>
         </div>
 
-        {/* MOBILE AVATAR */}
-        {!loadingProfile && (
-          <img
-            src={user.avatar}
-            alt="avatar"
-            className="mobile-header-avatar"
-            onClick={() => setShowMobileProfile(true)}
-          />
-        )}
-      </header>
+        {/* ── BOTTOM ROW ── */}
+        <div className="hp-bottom-row">
+          {/* NEWS CARD */}
+          <div className="hp-card hp-bottom-card">
+            <div className="hp-card-header">
+              <h3 className="hp-panel-title">NEWS</h3>
+            </div>
+            <div className="hp-bottom-news-list">
+              {/* latest headlines placeholder from HomeNews data — static preview tiles */}
+              <p className="hp-dim-text">Latest gaming headlines</p>
+              <a
+                href="/news"
+                className="hp-view-all"
+                style={{ marginTop: "auto" }}
+              >
+                View all →
+              </a>
+            </div>
+          </div>
 
-      {/* MOBILE PROFILE MODAL */}
-      {showMobileProfile && (
-        <div className="mobile-profile-modal">
-          <div
-            className="modal-backdrop"
-            onClick={() => setShowMobileProfile(false)}
-          />
+          {/* GAMES CARD */}
+          <div className="hp-card hp-bottom-card">
+            <div className="hp-card-header">
+              <h3 className="hp-panel-title">FEATURED GAMES</h3>
+            </div>
+            <div className="hp-games-mini-list">
+              {loadingGames
+                ? Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="hp-skeleton-row" />
+                  ))
+                : trendingGames.slice(0, 4).map((game) => (
+                    <div
+                      key={game.id}
+                      className="hp-game-mini-item"
+                      onClick={() => navigate(`/games/${game.id}`)}
+                    >
+                      <span className="hp-game-name">{game.name}</span>
+                      <span className="hp-game-meta">⭐ {game.rating}</span>
+                    </div>
+                  ))}
+            </div>
+            <div className="hp-bottom-card-footer">
+              <a href="/games" className="hp-view-all">
+                Browse all →
+              </a>
+              <div className="hp-toggle-pill" />
+            </div>
+          </div>
 
-          <div className="modal-card">
-            <button
-              className="modal-close"
-              onClick={() => setShowMobileProfile(false)}
-            >
-              ✕
-            </button>
-
-            <div className="glass-panel modal-profile-card">
-              <h3 className="panel-title">IDENTITY</h3>
-
-              <div className="profile-content">
-                <img
-                  src={getAvatarUrl(user)}
-                  alt="User Avatar"
-                  className="avatar-img"
-                />
-
-                <p className="user-name">{user.name}</p>
-
-                {user.role === "guest" ? (
-                  <button className="btn primary small">INIT_LOGIN</button>
-                ) : (
-                  <>
-                    <p className="user-role">
-                      class:{" "}
-                      {user.accountType === "developer" ? "DEVELOPER" : "GAMER"}
-                    </p>
-
-                    {!user.isVerified && (
-                      <p className="status-warning">⚠ UNVERIFIED</p>
-                    )}
-
-                    <Button onClick={() => navigate("/profile")}>
-                      PROFILE
-                    </Button>
-                    <Button onClick={() => navigate("/auth")}>LOGOUT</Button>
-                  </>
-                )}
+          {/* EXPLORE CARD */}
+          <div className="hp-card hp-bottom-card">
+            <div className="hp-card-header">
+              <h3 className="hp-panel-title">EXPLORE</h3>
+              <div className="hp-toggle-switch">
+                <div className="hp-toggle-knob" />
               </div>
+            </div>
+            <div className="hp-explore-links">
+              {[
+                "Games",
+                "Genres",
+                "Communities",
+                "Dev Labs",
+                "Challenges",
+                "Leaderboard",
+              ].map((item) => (
+                <span key={item} className="hp-explore-tag">
+                  {item}
+                </span>
+              ))}
+            </div>
+            <div className="hp-bottom-card-footer">
+              <span className="hp-dim-text">Discover more →</span>
+              <div className="hp-big-circle" />
             </div>
           </div>
         </div>
-      )}
-      <div className="dashboard-layout">
-        {/* LEFT SIDEBAR (DESKTOP ONLY) */}
-        <aside className="sidebar left-sidebar">
-          <div className="glass-panel">
-            <h3 className="panel-title">IDENTITY</h3>
-
-            {loadingProfile ? (
-              <p className="dim-text">Loading data...</p>
-            ) : (
-              <div className="profile-content">
-                <img
-                  src={getAvatarUrl(user)}
-                  alt="User Avatar"
-                  className="avatar-img"
-                />
-
-                <p className="user-name">{user.name}</p>
-
-                {user.role === "guest" ? (
-                  <button className="btn primary small">INIT_LOGIN</button>
-                ) : (
-                  <>
-                    <p className="user-role">
-                      class:{" "}
-                      {user.accountType === "developer" ? "DEVELOPER" : "GAMER"}
-                    </p>
-
-                    {!user.isVerified && (
-                      <p className="status-warning">⚠ UNVERIFIED</p>
-                    )}
-
-                    <Button onClick={() => navigate("/profile")}>
-                      PROFILE
-                    </Button>
-                    <Button onClick={() => navigate("/auth")}>LOGOUT</Button>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="glass-panel">
-            <h3 className="panel-title">EXPLORE</h3>
-            {exploreLinks.map((item, i) => (
-              <div key={i} className="nav-item">
-                {item}
-              </div>
-            ))}
-          </div>
-        </aside>
-
-        {/* MAIN FEED */}
-        <main className="main-feed">
-          <div className="section-header">
-            <h2 className="section-title">NEWS_FEED</h2>
-            <div className="divider"></div>
-          </div>
-
-          <HomeNews />
-
-          <div className="section-header" style={{ marginTop: "32px" }}>
-            <h2 className="section-title">FEATURED_GAMES</h2>
-            <div className="divider"></div>
-          </div>
-
-          <div className="games-grid">
-            {loadingGames
-              ? Array.from({ length: 4 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="glass-panel game-card skeleton-card"
-                  />
-                ))
-              : trendingGames.map((game) => (
-                  <div
-                    key={game.id}
-                    className="glass-panel game-card clickable"
-                    onClick={() => navigate(`/games/${game.id}`)}
-                  >
-                    <h4>{game.name}</h4>
-                    <p className="dim-text">
-                      ⭐ {game.rating} · 🎮 {game.playtime}h
-                    </p>
-                  </div>
-                ))}
-          </div>
-        </main>
-
-        {/* RIGHT SIDEBAR (DESKTOP ONLY) */}
-        <aside className="sidebar right-sidebar">
-          <div className="glass-panel">
-            <h3 className="panel-title">TRENDING</h3>
-            {trendingGenres.map((g, i) => (
-              <p key={i} className="list-link">
-                #{g}
-              </p>
-            ))}
-          </div>
-
-          <div className="glass-panel">
-            <h3 className="panel-title">DISCUSSIONS</h3>
-            {activeDiscussions.map((d, i) => (
-              <div key={i} className="discussion-item">
-                <span className="arrow">{">"}</span> {d}
-              </div>
-            ))}
-          </div>
-        </aside>
       </div>
     </div>
   );

@@ -6,12 +6,16 @@ import Landing from "./pages/Landing";
 import AuthPage from "./pages/auth/AuthPage";
 import OTPVerification from "./pages/auth/OTPVerification";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
-import "./App.css";
 import News from "./pages/news/News";
 import Games from "./pages/games/Games";
 import GameDetails from "./pages/games/GamesDetails";
+
+import MainLayout from "./pages/MainLayout";
+
+import "./App.css";
 
 function App() {
   return (
@@ -27,16 +31,22 @@ function App() {
             },
           }}
         />
+
         <Routes>
+          {/* PUBLIC ROUTES */}
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/verify-email" element={<OTPVerification />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/games" element={<Games />} />
-          <Route path="/games/:id" element={<GameDetails />} />
+
+          {/* PROTECTED / MAIN LAYOUT */}
+          <Route element={<MainLayout />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/games" element={<Games />} />
+            <Route path="/games/:id" element={<GameDetails />} />
+          </Route>
         </Routes>
       </Router>
     </AuthProvider>
