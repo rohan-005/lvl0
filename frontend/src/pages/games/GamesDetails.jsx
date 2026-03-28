@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-// import StaggeredMenu from "../../ui_components/StaggeredMenu";
 import {
   fetchGameDetails,
   fetchGameStores,
@@ -104,8 +103,6 @@ const GameDetails = () => {
 
   return (
     <>
-      {/* <StaggeredMenu items={menuItems} /> */}
-
       <div className="game-details-page">
         {/* HEADER */}
         <div className="details-header">

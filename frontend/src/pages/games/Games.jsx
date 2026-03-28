@@ -2,7 +2,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchGames } from "../../utils/gamesApi";
-import StaggeredMenu from "../../ui_components/StaggeredMenu";
 import "../../css/games.css";
 
 /* =====================
@@ -90,11 +89,8 @@ const Games = () => {
   );
 
   return (
-    <>
-      <StaggeredMenu items={menuItems} socialItems={socialItems} />
-
-      <div className="news-page">
-        {/* HEADER */}
+    <div className="news-page">
+      {/* HEADER */}
         <div className="news-header">
           <div className="lvl0-logo">
             lvl<span className="underscore">_</span>0
@@ -205,7 +201,6 @@ const Games = () => {
           Game data powered by <span>RAWG.io</span>
         </div>
       </div>
-    </>
   );
 };
 

@@ -2,7 +2,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { getNews } from "../../utils/newsApi";
 import { getNewsImage } from "../../utils/newsImage";
-import StaggeredMenu from "../../ui_components/StaggeredMenu";
 import "../../css/news.css";
 
 /* =====================
@@ -145,12 +144,8 @@ const News = () => {
   };
 
   return (
-    <>
-      {/* MENU (mounted once, overlay-safe) */}
-      <StaggeredMenu items={menuItems} socialItems={socialItems} />
-
-      <div className="news-page">
-        {/* HEADER */}
+    <div className="news-page">
+      {/* HEADER */}
         <div className="news-header">
           <div className="lvl0-logo">
             lvl<span className="underscore">_</span>0
@@ -294,7 +289,6 @@ const News = () => {
           </>
         )}
       </div>
-    </>
   );
 };
 

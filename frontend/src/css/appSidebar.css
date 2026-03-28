@@ -1,0 +1,133 @@
+/* AppSidebar — shared sidebar styles, matches home.css sidebar aesthetic */
+
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 70px;
+  background: rgba(4, 7, 14, 0.97);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+  transition: width 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 200;
+  backdrop-filter: blur(14px);
+}
+
+.app-sidebar.open {
+  width: 196px;
+  border-right-color: var(--border-accent);
+  box-shadow: 4px 0 28px rgba(251, 54, 64, 0.10);
+}
+
+.app-sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 16px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.app-logo-text {
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 900;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+.app-underscore {
+  font-size: 0.6em;
+  position: relative;
+  top: -0.12em;
+}
+
+.app-chevron {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  flex-shrink: 0;
+  transition: opacity 0.2s, transform 0.26s;
+}
+.app-sidebar.open .app-chevron {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+
+.app-sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 6px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.app-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-align: left;
+  white-space: nowrap;
+  transition: background 0.16s, color 0.16s;
+}
+.app-nav-item:hover,
+.app-nav-item.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.app-nav-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.app-nav-icon svg { width: 17px; height: 17px; }
+
+.app-nav-label {
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.18s 0.04s, transform 0.18s 0.04s;
+  pointer-events: none;
+}
+.app-sidebar.open .app-nav-label {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* ── Page body offset ── */
+.app-page-body {
+  margin-left: 65px;
+  min-height: 100vh;
+}
+
+@media (max-width: 560px) {
+  .app-sidebar { width: 60px; }
+  .app-page-body { margin-left: 55px; }
+  .app-logo-text {
+  font-size: 0.7rem;
+}
+}

@@ -1,19 +1,25 @@
-import Sidebar from "../ui_components/Sidebar";
-import { Outlet } from "react-router-dom";
+import { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import AppSidebar from "../ui_components/AppSidebar";
+import "../css/appSidebar.css";
 
-const MainLayout = ({ user, loadingProfile, getAvatarUrl }) => {
+const MainLayout = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+
   return (
-    <div style={{ display: "flex" }}>
-      <Sidebar
-        user={user}
-        loadingProfile={loadingProfile}
-        getAvatarUrl={getAvatarUrl}
+    <>
+      <AppSidebar 
+        open={sidebarOpen} 
+        onToggle={() => setSidebarOpen(o => !o)} 
+        onMouseEnter={() => setSidebarOpen(true)}
+        onMouseLeave={() => setSidebarOpen(false)}
+        activePath={location.pathname} 
       />
-
-      <div className="main-content">
+      <div className="app-page-body">
         <Outlet />
       </div>
-    </div>
+    </>
   );
 };
 
