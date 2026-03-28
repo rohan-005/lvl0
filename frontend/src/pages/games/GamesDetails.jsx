@@ -9,15 +9,7 @@ import "../../css/games.css";
 
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
-/* =====================
-   NAV
-   ===================== */
-// const menuItems = [
-//   { label: "Home", link: "/home" },
-//   { label: "News", link: "/news" },
-//   { label: "Games Data", link: "/games" },
-//   { label: "Profile", link: "/profile" },
-// ];
+
 
 const RATING_COLORS = {
   exceptional: "#00ff77",
@@ -35,7 +27,7 @@ const GameDetails = () => {
   const [similarGames, setSimilarGames] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  /* Reviews */
+
   const [reviews, setReviews] = useState(() => {
     const saved = localStorage.getItem(`reviews_${id}`);
     return saved ? JSON.parse(saved) : [];
@@ -64,7 +56,7 @@ const GameDetails = () => {
     loadAll();
   }, [id]);
 
-  /* SAVE REVIEW */
+
   const submitReview = () => {
     if (!comment.trim()) return;
 
@@ -105,11 +97,8 @@ const GameDetails = () => {
   return (
     <>
       <div className="game-details-page">
-        {/* HEADER */}
+
         <div className="details-header">
-          <div className="lvl0-logo">
-            lvl<span className="underscore">_</span>0
-          </div>
 
           <button className="back-btn" onClick={() => navigate(-1)}>
             ← Back
@@ -118,7 +107,7 @@ const GameDetails = () => {
 
         <div className="bento-grid">
           
-          {/* 1. HERO (Top Left 2x1) */}
+
           <div 
             className="bento-card bento-hero" 
             style={{ backgroundImage: `url(${game.background_image})`, backgroundSize: "cover", backgroundPosition: "center" }}
@@ -129,7 +118,7 @@ const GameDetails = () => {
             </div>
           </div>
 
-          {/* 2. CHART & STATS (Top Right 2x1) */}
+
           <div className="bento-card bento-chart">
             <h3>PLAYER RATINGS & STATS</h3>
             
@@ -182,7 +171,7 @@ const GameDetails = () => {
             )}
           </div>
 
-          {/* 3. INFO STACK (Bottom Left Col 1) */}
+
           <div className="bento-bottom-left-stack">
             <div className="bento-card bento-platforms">
               <h3>PLATFORMS</h3>
@@ -202,13 +191,13 @@ const GameDetails = () => {
             </div>
           </div>
 
-          {/* 4. ABOUT (Bottom Middle Col 2) */}
+
           <div className="bento-card bento-about">
             <h3>ABOUT</h3>
             <div className="bento-description" dangerouslySetInnerHTML={{ __html: game.description }} />
           </div>
 
-          {/* 5. SIMILAR GAMES (Bottom Right Col 3-4) */}
+
           <div className="bento-card bento-similar">
             <h3>SIMILAR GAMES</h3>
             <div className="similar-bento-scroll">
@@ -221,7 +210,7 @@ const GameDetails = () => {
             </div>
           </div>
 
-          {/* 6. REVIEWS (Full Width Bottom) */}
+
           <div className="bento-card bento-reviews">
             <h3>USER REVIEWS</h3>
             <div className="review-flex">

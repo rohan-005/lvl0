@@ -19,6 +19,7 @@
   font-size: 28px;
   background: linear-gradient(90deg, #fff, var(--text-dim));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 0;
 }
@@ -68,11 +69,13 @@
    SEARCH & TAGS AREA
    ===================== */
 .news-search-container {
-  background: rgba(17, 31, 53, 0.8);
+  background: rgba(17, 31, 53, 0.6);
+  backdrop-filter: blur(16px);
   padding: 20px;
   border-radius: 16px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255,255,255,0.08);
   margin-bottom: 30px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 }
 
 .news-search {
@@ -162,15 +165,16 @@
    GRID & LIST LAYOUTS
    ===================== */
 .news-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
+  column-count: 5;
+  column-gap: 20px;
 }
+@media (max-width: 1400px) { .news-grid { column-count: 4; } }
+@media (max-width: 1100px) { .news-grid { column-count: 3; } }
+@media (max-width: 768px) { .news-grid { column-count: 2; } }
+@media (max-width: 500px) { .news-grid { column-count: 1; } }
 
-/* CSS Magic: List View Override */
 .news-grid.list-view {
-  display: flex;
-  flex-direction: column;
+  column-count: 1;
 }
 
 .news-grid.list-view .news-card {
@@ -189,35 +193,79 @@
 }
 
 /* =====================
+   SKELETON MASONRY
+   ===================== */
+.news-grid .skeleton-card {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.news-grid .skeleton-img {
+  width: 100%;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.02) 75%);
+  background-size: 400% 100%;
+  animation: masonry-shimmer 1.5s infinite linear;
+}
+.news-grid .skeleton-card:nth-child(even) .skeleton-img { height: 260px; }
+.news-grid .skeleton-card:nth-child(3n) .skeleton-img { height: 180px; }
+.news-grid .skeleton-card:nth-child(3n+1) .skeleton-img { height: 320px; }
+.news-grid .skeleton-card:nth-child(5n) .skeleton-img { height: 220px; }
+
+.news-grid .skeleton-line {
+  height: 12px;
+  width: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.02) 75%);
+  background-size: 400% 100%;
+  animation: masonry-shimmer 1.5s infinite linear;
+}
+.news-grid .skeleton-line.short { width: 60%; }
+
+@keyframes masonry-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* =====================
    CARD DESIGN
    ===================== */
 .news-card {
-  background: var(--bg-card);
+  background: rgba(20, 32, 54, 0.4);
+  backdrop-filter: blur(12px);
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid var(--border);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  display: flex;
-  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 20px;
+  break-inside: avoid;
   position: relative;
 }
 
 .news-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--border-accent);
-  box-shadow: 0 10px 30px -10px var(--accent-glow);
+  transform: translateY(-6px) scale(1.01);
+  border-color: var(--accent);
+  box-shadow: 0 16px 40px -12px var(--accent-glow), 0 0 15px 0 rgba(255,255,255,0.05) inset;
+  z-index: 2;
 }
 
 .card-image-wrapper {
   position: relative;
-  height: 180px;
+  width: 100%;
   overflow: hidden;
 }
 
 .news-image {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  display: block;
+  object-fit: contain;
   transition: transform 0.5s ease;
 }
 
@@ -291,6 +339,7 @@
   color: #fff;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -302,6 +351,7 @@
   margin-bottom: 15px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
