@@ -17,7 +17,7 @@ const CreateRoomModal = ({ onClose, onRoomCreated }) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/chat/rooms`,
+        `${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}/api/chat/rooms`,
         { name: name.trim(), category },
         { headers: { Authorization: `Bearer ${token}` } }
       );

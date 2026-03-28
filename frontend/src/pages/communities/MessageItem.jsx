@@ -66,17 +66,17 @@ const MessageItem = ({ message, isOwn, showAvatar, socket, currentUserRole }) =>
             <div className="message-attachment">
               {message.attachmentUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
                 <img 
-                  src={`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}${message.attachmentUrl}`} 
+                  src={`${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}${message.attachmentUrl}`} 
                   alt="attachment" 
                   loading="lazy" 
                 />
               ) : message.attachmentUrl.match(/\.(mp4|webm|ogg)$/i) ? (
                 <video 
                   controls 
-                  src={`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}${message.attachmentUrl}`} 
+                  src={`${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}${message.attachmentUrl}`} 
                 />
               ) : (
-                <a href={`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}${message.attachmentUrl}`} target="_blank" rel="noreferrer" className="attachment-link">
+                <a href={`${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}${message.attachmentUrl}`} target="_blank" rel="noreferrer" className="attachment-link">
                   📎 View Attachment
                 </a>
               )}

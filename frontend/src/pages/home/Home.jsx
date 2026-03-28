@@ -136,7 +136,7 @@ const Home = () => {
     (async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/chat/rooms`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}/api/chat/rooms`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {}
         });
         // Select top 5 rooms as "trending"
