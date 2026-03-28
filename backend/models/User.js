@@ -34,13 +34,23 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["user"],
+      enum: ["user", "moderator", "admin"],
       default: "user",
     },
 
     isVerified: {
       type: Boolean,
       default: false,
+    },
+    
+    avatar: {
+      type: String,
+      default: "",
+    },
+
+    mutedUntil: {
+      type: Date,
+      default: null,
     },
     
 
