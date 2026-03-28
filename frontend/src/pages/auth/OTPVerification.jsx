@@ -26,7 +26,7 @@ export default function OTPVerification() {
       localStorage.getItem("pendingVerificationEmail");
 
     if (!mail) {
-      navigate("/register");
+      navigate("/auth");
       return;
     }
 
@@ -113,7 +113,7 @@ export default function OTPVerification() {
       await api.post("/otp/verify-email", { email, otp: code });
       toast.success("Email verified");
       localStorage.removeItem("pendingVerificationEmail");
-      navigate("/login");
+      navigate("/auth");
     } catch (err) {
       toast.error(err.response?.data?.message || "Invalid OTP");
       setOtp(Array(6).fill(""));
@@ -193,7 +193,7 @@ export default function OTPVerification() {
         <div className="auth-link">
           <button
             type="button"
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/auth")}
           >
             ← Back
           </button>

@@ -40,7 +40,15 @@ router.post("/register", async (req, res) => {
       email: user.email,
     });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join(', ') });
+    }
+    if (err.code === 11000) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+    console.error("Registration Error: ", err);
+    res.status(500).json({ message: "Registration failed. Please try again later." });
   }
 });
 
@@ -81,11 +89,15 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email }).select("+password");
-  if (!user || !(await user.matchPassword(password)))
-    return res.status(401).json({ message: "Invalid credentials" });
+  
+  if (!user)
+    return res.status(404).json({ message: "User not registered" });
+
+  if (!(await user.matchPassword(password)))
+    return res.status(400).json({ message: "Incorrect password" });
 
   if (!user.isVerified)
-    return res.status(401).json({ message: "Email not verified" });
+    return res.status(400).json({ message: "Email not verified" });
 
   res.json({
     success: true,
