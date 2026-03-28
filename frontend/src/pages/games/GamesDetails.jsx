@@ -97,6 +97,7 @@ const GameDetails = () => {
       ? game.ratings.map((r) => ({
           name: r.title.toUpperCase(),
           value: r.count,
+          percent: r.percent,
           color: RATING_COLORS[r.title] || "#888",
         }))
       : [];
@@ -115,133 +116,156 @@ const GameDetails = () => {
           </button>
         </div>
 
-        {/* HERO */}
-        <div
-          className="game-hero"
-          style={{ backgroundImage: `url(${game.background_image})` }}
-        >
-          <div className="hero-overlay">
-            <h1>{game.name}</h1>
-            <p>
-              ⭐ {game.rating} · 🎯 Metacritic {game.metacritic || "N/A"}
-            </p>
+        <div className="bento-grid">
+          
+          {/* 1. HERO (Top Left 2x1) */}
+          <div 
+            className="bento-card bento-hero" 
+            style={{ backgroundImage: `url(${game.background_image})`, backgroundSize: "cover", backgroundPosition: "center" }}
+          >
+            <div className="hero-bento-overlay">
+              <h1>{game.name}</h1>
+              <p>⭐ {game.rating} · 🎯 Metacritic {game.metacritic || "N/A"}</p>
+            </div>
           </div>
-        </div>
 
-        {/* ABOUT */}
-        <section className="glass-section">
-          <h3 className="section-title">ABOUT</h3>
-          <div
-            className="description"
-            dangerouslySetInnerHTML={{ __html: game.description }}
-          />
-        </section>
+          {/* 2. CHART & STATS (Top Right 2x1) */}
+          <div className="bento-card bento-chart">
+            <h3>PLAYER RATINGS & STATS</h3>
+            
+            <div className="quick-stats-row">
+              <div className="stat-box"><span>PLAYTIME</span><strong>{game.playtime || 0}h</strong></div>
+              <div className="stat-box"><span>ADDED BY</span><strong>{game.added ? game.added.toLocaleString() : 0}</strong></div>
+              <div className="stat-box"><span>ACHIEVEMENTS</span><strong>{game.parent_achievements_count || game.achievements_count || "N/A"}</strong></div>
+            </div>
 
-        {/* RATINGS */}
-        <section className="glass-section">
-          <h3 className="section-title">PLAYER RATINGS</h3>
-
-          {ratingData.length ? (
-            <div className="ratings-layout">
-              <div className="chart-wrapper">
-                <ResponsiveContainer width="100%" height={260}>
-                  <PieChart>
-                    <Pie
-                      data={ratingData}
-                      dataKey="value"
-                      innerRadius={60}
-                      outerRadius={100}
-                    >
-                      {ratingData.map((r, i) => (
-                        <Cell key={i} fill={r.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
+            {ratingData.length ? (
+              <div className="bento-ratings-layout">
+                <div className="chart-wrapper">
+                  <ResponsiveContainer width="100%" height={240}>
+                    <PieChart>
+                      <Pie 
+                        data={ratingData} 
+                        dataKey="value" 
+                        innerRadius={50} 
+                        outerRadius={80}
+                        label={({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
+                          const rad = Math.PI / 180;
+                          const radius = outerRadius + 20;
+                          const x = cx + radius * Math.cos(-midAngle * rad);
+                          const y = cy + radius * Math.sin(-midAngle * rad);
+                          return (
+                            <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" fontSize="11px" fontWeight="bold">
+                              {`${name} ${percent ? percent.toFixed(1) + '%' : ''}`}
+                            </text>
+                          );
+                        }}
+                        labelLine={false}
+                      >
+                        {ratingData.map((r, i) => <Cell key={i} fill={r.color} />)}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="rating-legend">
+                  {ratingData.map((r, i) => (
+                    <div key={i} className="legend-row">
+                      <span className="legend-dot" style={{ background: r.color }} />
+                      <span className="legend-label">{r.name} <em>({r.value})</em></span>
+                    </div>
+                  ))}
+                </div>
               </div>
+            ) : (
+              <p className="dim-text" style={{marginTop:"20px"}}>No rating data</p>
+            )}
+          </div>
 
-              <div className="rating-legend">
-                {ratingData.map((r, i) => (
-                  <div key={i} className="legend-row">
-                    <span
-                      className="legend-dot"
-                      style={{ background: r.color }}
-                    />
-                    <span className="legend-label">{r.name}</span>
-                    <span className="legend-value">{r.value}</span>
-                  </div>
+          {/* 3. INFO STACK (Bottom Left Col 1) */}
+          <div className="bento-bottom-left-stack">
+            <div className="bento-card bento-platforms">
+              <h3>PLATFORMS</h3>
+              <div className="platform-chips">
+                {game.platforms.slice(0, 5).map((p, i) => (
+                  <span key={i} className="platform-chip">{p.platform.name}</span>
                 ))}
               </div>
             </div>
-          ) : (
-            <p className="dim-text">No rating data available</p>
-          )}
-        </section>
-
-        {/* AVAILABLE ON */}
-        <section className="glass-section">
-          <h3 className="section-title">AVAILABLE ON</h3>
-
-          <div className="platform-chips">
-            {game.platforms.map((p, i) => (
-              <span key={i} className="platform-chip">
-                {p.platform.name}
-              </span>
-            ))}
-          </div>
-        </section>
-
-        {/* SIMILAR GAMES */}
-        <section className="glass-section">
-          <h3 className="section-title">SIMILAR GAMES</h3>
-
-          <div className="similar-scroll">
-            {similarGames.map((g) => (
-              <div
-                key={g.id}
-                className="similar-card"
-                onClick={() => navigate(`/games/${g.id}`)}
-              >
-                <img src={g.background_image} alt={g.name} />
-                <p>{g.name}</p>
+            <div className="bento-card bento-stores">
+              <h3>STORES</h3>
+              <div className="store-links">
+                {stores.slice(0, 3).map((s, i) => (
+                  <a key={i} href={s.url} target="_blank" rel="noreferrer">{s.store?.name || "Store"}</a>
+                ))}
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* REVIEWS */}
-        <section className="glass-section">
-          <h3 className="section-title">USER REVIEWS</h3>
-
-          <div className="review-form">
-            <select value={rating} onChange={(e) => setRating(e.target.value)}>
-              {[5, 4, 3, 2, 1].map((r) => (
-                <option key={r} value={r}>
-                  {r} ★
-                </option>
-              ))}
-            </select>
-
-            <textarea
-              placeholder="Write your thoughts…"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-
-            <button onClick={submitReview}>Submit</button>
-          </div>
-
-          {reviews.length === 0 && <p className="dim-text">No reviews yet</p>}
-
-          {reviews.map((r, i) => (
-            <div key={i} className="review-card">
-              <strong>{r.rating} ★</strong>
-              <p>{r.comment}</p>
-              <span className="review-date">{r.date}</span>
             </div>
-          ))}
-        </section>
+          </div>
+
+          {/* 4. ABOUT (Bottom Middle Col 2) */}
+          <div className="bento-card bento-about">
+            <h3>ABOUT</h3>
+            <div className="bento-description" dangerouslySetInnerHTML={{ __html: game.description }} />
+          </div>
+
+          {/* 5. SIMILAR GAMES (Bottom Right Col 3-4) */}
+          <div className="bento-card bento-similar">
+            <h3>SIMILAR GAMES</h3>
+            <div className="similar-bento-scroll">
+              {similarGames.map(g => (
+                <div key={g.id} className="similar-bento-card" onClick={() => navigate(`/games/${g.id}`)}>
+                  <img src={g.background_image} alt={g.name} />
+                  <p>{g.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 6. REVIEWS (Full Width Bottom) */}
+          <div className="bento-card bento-reviews">
+            <h3>USER REVIEWS</h3>
+            <div className="review-flex">
+              
+              <div className="review-form">
+                <div className="star-rating-input">
+                  {[1, 2, 3, 4, 5].map(star => (
+                    <span 
+                      key={star} 
+                      className={`star ${rating >= star ? 'active' : ''}`}
+                      onClick={() => setRating(star)}
+                    >
+                      ★
+                    </span>
+                  ))}
+                  <span className="rating-text">{rating} Stars</span>
+                </div>
+                <textarea placeholder="Write your thoughts on this game…" value={comment} onChange={(e) => setComment(e.target.value)} />
+                <button className="submit-review-btn" onClick={submitReview}>Post Review</button>
+              </div>
+
+              <div className="review-list">
+                {reviews.length === 0 && <div className="empty-reviews">No reviews yet. Be the first to share your thoughts!</div>}
+                {reviews.map((r, i) => (
+                  <div key={i} className="review-card">
+                    <div className="review-header">
+                      <div className="review-avatar">U</div>
+                      <div className="review-meta">
+                        <span className="review-stars">
+                          <span className="stars-active">{"★".repeat(r.rating)}</span>
+                          <span className="stars-inactive">{"★".repeat(5 - r.rating)}</span>
+                        </span>
+                        <span className="review-date">{r.date}</span>
+                      </div>
+                    </div>
+                    <p className="review-body">{r.comment}</p>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          </div>
+
+        </div>
 
         <div className="rawg-credit">
           Game data powered by <span>RAWG.io</span>
