@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
+const path = require('path');
 
 // Load env vars
 dotenv.config();
@@ -53,6 +54,9 @@ app.use("/api/news", newsRoutes);
 app.use("/api/games", games);
 app.use("/api/chat", chatRoutes);
 
+
+// -------------------- STATIC FILES --------------------
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // -------------------- HEALTH CHECK --------------------
 app.get('/api/health', (req, res) => {

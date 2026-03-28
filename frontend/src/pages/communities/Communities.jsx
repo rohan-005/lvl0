@@ -1,20 +1,36 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useSocket } from "../../context/SocketContext";
 import { useAuth } from "../../context/AuthContext";
 import ChatArea from "./ChatArea";
+import CreateRoomModal from "./CreateRoomModal";
 import "../../css/communities.css";
-
-const GAMER_CHANNELS = ["General", "Action", "RPG", "FPS", "Indie"];
-const DEV_CHANNELS = ["General", "Unity", "Unreal Engine", "WebGL", "Indie Dev"];
 
 const Communities = () => {
   const socket = useSocket();
   const { user } = useAuth();
   
   const [activeCategory, setActiveCategory] = useState("gamer"); // 'gamer' || 'developer'
-  const [activeChannel, setActiveChannel] = useState("General");
-  
-  const [onlineUsers, setOnlineUsers] = useState([]); // Mock or real
+  const [activeChannel, setActiveChannel] = useState("general");
+  const [rooms, setRooms] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+
+  // Fetch Rooms
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/chat/rooms`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setRooms(res.data);
+      } catch (err) {
+        console.error("Failed to fetch rooms", err);
+      }
+    };
+    fetchRooms();
+  }, []);
 
   useEffect(() => {
     if (!socket) return;
@@ -41,18 +57,21 @@ const Communities = () => {
           </div>
           
           <div className="channel-group">
-            <h3 onClick={() => setActiveCategory("gamer")} className={activeCategory === "gamer" ? "active-cat" : ""}>
-              🎮 GAMER LOUNGE
-            </h3>
+            <div className="channel-group-header">
+              <h3 onClick={() => setActiveCategory("gamer")} className={activeCategory === "gamer" ? "active-cat" : ""}>
+                🎮 GAMER LOUNGE
+              </h3>
+              <button className="add-room-btn" onClick={() => { setActiveCategory("gamer"); setShowModal(true); }}>+</button>
+            </div>
             {activeCategory === "gamer" && (
               <ul className="channel-list">
-                {GAMER_CHANNELS.map(ch => (
+                {rooms.filter(r => r.category === "gamer").map(room => (
                   <li 
-                    key={ch} 
-                    className={activeChannel === ch ? "active-channel" : ""}
-                    onClick={() => setActiveChannel(ch)}
+                    key={room._id} 
+                    className={activeChannel === room.name.toLowerCase() ? "active-channel" : ""}
+                    onClick={() => setActiveChannel(room.name.toLowerCase())}
                   >
-                    # {ch.toLowerCase()}
+                    # {room.name.toLowerCase()}
                   </li>
                 ))}
               </ul>
@@ -60,18 +79,21 @@ const Communities = () => {
           </div>
 
           <div className="channel-group">
-            <h3 onClick={() => setActiveCategory("developer")} className={activeCategory === "developer" ? "active-cat" : ""}>
-              💻 DEV SPACES
-            </h3>
+            <div className="channel-group-header">
+              <h3 onClick={() => setActiveCategory("developer")} className={activeCategory === "developer" ? "active-cat" : ""}>
+                💻 DEV SPACES
+              </h3>
+              <button className="add-room-btn" onClick={() => { setActiveCategory("developer"); setShowModal(true); }}>+</button>
+            </div>
             {activeCategory === "developer" && (
               <ul className="channel-list">
-                {DEV_CHANNELS.map(ch => (
+                {rooms.filter(r => r.category === "developer").map(room => (
                   <li 
-                    key={ch} 
-                    className={activeChannel === ch ? "active-channel" : ""}
-                    onClick={() => setActiveChannel(ch)}
+                    key={room._id} 
+                    className={activeChannel === room.name.toLowerCase() ? "active-channel" : ""}
+                    onClick={() => setActiveChannel(room.name.toLowerCase())}
                   >
-                    # {ch.toLowerCase().replace(" ", "-")}
+                    # {room.name.toLowerCase()}
                   </li>
                 ))}
               </ul>
@@ -107,6 +129,18 @@ const Communities = () => {
         </div>
 
       </div>
+
+      {showModal && (
+        <CreateRoomModal 
+          onClose={() => setShowModal(false)} 
+          onRoomCreated={(newRoom) => {
+            setRooms(prev => [...prev, newRoom]);
+            setShowModal(false);
+            setActiveCategory(newRoom.category);
+            setActiveChannel(newRoom.name.toLowerCase());
+          }} 
+        />
+      )}
     </div>
   );
 };

@@ -13,10 +13,13 @@ const ChatArea = ({ roomId, channel }) => {
   const [inputText, setInputText] = useState("");
   const [typingUsers, setTypingUsers] = useState({});
   const [loading, setLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   const messagesEndRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   // Fetch initial history
   useEffect(() => {
@@ -99,20 +102,54 @@ const ChatArea = ({ roomId, channel }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleSend = (e) => {
+  const handleFileSelect = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  const handleSend = async (e) => {
     e.preventDefault();
-    if (!inputText.trim() || !socket) return;
+    if ((!inputText.trim() && !selectedFile) || !socket) return;
+
+    let attachmentUrl = null;
+
+    if (selectedFile) {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("attachment", selectedFile);
+      
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/chat/upload`,
+          formData,
+          { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } }
+        );
+        attachmentUrl = res.data.url;
+      } catch (err) {
+        console.error("Upload failed", err);
+        setUploading(false);
+        return; // Halt send on failure
+      }
+      setUploading(false);
+      setSelectedFile(null);
+    }
 
     socket.emit("message:send", {
       roomId,
       channel,
-      messageText: inputText
+      messageText: inputText,
+      attachmentUrl
     });
 
     setInputText("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    
     socket.emit("typing:stop", { roomId, channel });
     if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
   };
+
 
   const handleTyping = (e) => {
     setInputText(e.target.value);
@@ -182,14 +219,40 @@ const ChatArea = ({ roomId, channel }) => {
             {typingNames.join(", ")} {typingNames.length > 1 ? "are" : "is"} typing...
           </div>
         )}
+        
+        {selectedFile && (
+          <div className="attachment-preview">
+            <span>📎 {selectedFile.name}</span>
+            <button onClick={() => setSelectedFile(null)}>×</button>
+          </div>
+        )}
+
         <form onSubmit={handleSend} className="chat-input-form">
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            hidden 
+            accept="image/*,video/*"
+            onChange={handleFileSelect}
+          />
+          <button 
+            type="button" 
+            className="btn-attach" 
+            onClick={() => fileInputRef.current?.click()}
+          >
+            📎
+          </button>
+          
           <input 
             type="text" 
             placeholder={`Message #${channel}...`} 
             value={inputText}
             onChange={handleTyping}
+            disabled={uploading}
           />
-          <button type="submit" disabled={!inputText.trim()}>Send</button>
+          <button type="submit" disabled={(!inputText.trim() && !selectedFile) || uploading}>
+            {uploading ? "..." : "Send"}
+          </button>
         </form>
       </div>
     </div>

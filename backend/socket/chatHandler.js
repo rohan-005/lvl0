@@ -38,13 +38,13 @@ module.exports = (io) => {
     });
 
     // --- Messaging ---
-    socket.on("message:send", async ({ roomId, channel, messageText }) => {
+    socket.on("message:send", async ({ roomId, channel, messageText, attachmentUrl }) => {
       // Check if muted
       if (socket.user.mutedUntil && new Date() < new Date(socket.user.mutedUntil)) {
         return socket.emit("error:muted", { message: "You are currently muted." });
       }
 
-      if (!messageText || !messageText.trim()) return;
+      if (!messageText?.trim() && !attachmentUrl) return; // Allow empty text if image attached
 
       try {
         const newMessage = await ChatMessage.create({
@@ -53,7 +53,8 @@ module.exports = (io) => {
           userId: socket.user._id,
           username: socket.user.name,
           avatar: socket.user.avatar || "",
-          message: messageText.trim(),
+          message: messageText ? messageText.trim() : "",
+          attachmentUrl: attachmentUrl || null,
         });
 
         const roomKey = `${roomId}:${channel}`;

@@ -58,8 +58,29 @@ const MessageItem = ({ message, isOwn, showAvatar, socket, currentUserRole }) =>
         )}
 
         <div className="message-body">
-          <p>{message.message}</p>
+          {message.message && <p>{message.message}</p>}
           
+          {message.attachmentUrl && (
+            <div className="message-attachment">
+              {message.attachmentUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
+                <img 
+                  src={`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}${message.attachmentUrl}`} 
+                  alt="attachment" 
+                  loading="lazy" 
+                />
+              ) : message.attachmentUrl.match(/\.(mp4|webm|ogg)$/i) ? (
+                <video 
+                  controls 
+                  src={`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}${message.attachmentUrl}`} 
+                />
+              ) : (
+                <a href={`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}${message.attachmentUrl}`} target="_blank" rel="noreferrer" className="attachment-link">
+                  📎 View Attachment
+                </a>
+              )}
+            </div>
+          )}
+
           {/* Reaction & Action Bar */}
           <div className="message-actions-bar">
             

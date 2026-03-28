@@ -27,9 +27,13 @@ const chatMessageSchema = new mongoose.Schema(
     },
     message: {
       type: String,
-      required: true,
       trim: true,
       maxlength: 2000,
+      default: "",
+    },
+    attachmentUrl: {
+      type: String,
+      default: null,
     },
     upvotes: {
       type: Number,
