@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../../css/home.css";
 import Button from "../../ui_components/Button";
 import HomeNews from "./HomeNews";
@@ -37,7 +38,7 @@ const NAV_ITEMS = [
   { icon: HomeIcon,      label: "Home",       link: "/home"     },
   { icon: NewsIcon,      label: "News",        link: "/news"     },
   { icon: GamesIcon,     label: "Games",       link: "/games"    },
-  { icon: CommunityIcon, label: "Communities", link: "/services" },
+  { icon: CommunityIcon, label: "Communities", link: "/communities" },
   { icon: ProfileIcon,   label: "Profile",     link: "/profile"  },
 ];
 
@@ -54,8 +55,8 @@ const GENRE_FILTERS = [
 const EXPLORE_LINKS = [
   { label: "Games",       link: "/games"    },
   { label: "Genres",      link: "/games"    },
-  { label: "Communities", link: "/services" },
-  { label: "Dev Labs",    link: "/services" },
+  { label: "Communities", link: "/communities" },
+  { label: "Dev Labs",    link: "/communities" },
   { label: "Leaderboard", link: "/games"    },
 ];
 
@@ -78,9 +79,11 @@ const Home = () => {
   const [activeGenre,  setActiveGenre] = useState(GENRE_FILTERS[0]);
 
   /* ── Feed filter ── */
-
-  /* ── Feed filter ── */
   const [activeFeed, setActiveFeed] = useState("All");
+
+  /* ── Trending Communities ── */
+  const [trendingRooms, setTrendingRooms] = useState([]);
+  const [loadingRooms, setLoadingRooms] = useState(true);
 
   /* ── News mini strip (bottom card) — pulled from HomeNews via prop ── */
   const [newsHeadlines, setNewsHeadlines] = useState([]);
@@ -128,12 +131,23 @@ const Home = () => {
 
   useEffect(() => { loadGames(activeGenre.id); }, [activeGenre]);
 
-  const discussions = [
-    "Best Soulslike combat?",
-    "Unity vs Unreal 2026",
-    "AI-driven NPC behavior",
-    "Best indie releases 2026",
-  ];
+  /* ── Fetch trending rooms ── */
+  useEffect(() => {
+    (async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/chat/rooms`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {}
+        });
+        // Select top 5 rooms as "trending"
+        setTrendingRooms(res.data.slice(0, 5));
+      } catch (err) {
+        console.error("Failed to load trending rooms:", err);
+      } finally {
+        setLoadingRooms(false);
+      }
+    })();
+  }, []);
 
   /* ═══════════ RENDER ═══════════ */
   return (
@@ -224,18 +238,40 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Discussions */}
+            {/* Trending Communities */}
             <div className="hp-card hp-discussions-card">
               <div className="hp-card-header" style={{ padding: "10px 14px 8px" }}>
-                <h3 className="hp-panel-title">DISCUSSIONS</h3>
+                <h3 className="hp-panel-title">COMMUNITIES 🔥</h3>
               </div>
               <div className="hp-discussions-body">
-                {discussions.map((d, i) => (
-                  <div key={i} className="hp-discussion-item">
-                    <span className="hp-discussion-arrow">›</span>
-                    <span>{d}</span>
+                {loadingRooms ? (
+                  Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="hp-discussion-item" style={{ minHeight: "24px", opacity: 0.5 }}>
+                      <div className="hp-skeleton-row" style={{ width: "80%", height: "12px" }} />
+                    </div>
+                  ))
+                ) : trendingRooms.length > 0 ? (
+                  trendingRooms.map((room) => (
+                    <div 
+                      key={room._id} 
+                      className="hp-discussion-item" 
+                      onClick={() => navigate("/communities")}
+                      style={{ cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                    >
+                      <div>
+                        <span className="hp-discussion-arrow" style={{ color: "var(--accent)", marginRight: "8px" }}>#</span>
+                        <span style={{ fontWeight: 600 }}>{room.name.toLowerCase()}</span>
+                      </div>
+                      <span style={{ fontSize: "10px", color: "var(--text-muted)", background: "rgba(255,255,255,0.05)", padding: "2px 6px", borderRadius: "4px" }}>
+                        {room.category === "gamer" ? "🎮 Gamer" : "💻 Dev"}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="hp-discussion-item">
+                    <span>No active communities.</span>
                   </div>
-                ))}
+                )}
               </div>
             </div>
 

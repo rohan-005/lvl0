@@ -41,7 +41,7 @@ const NAV_ITEMS = [
   { icon: HomeIcon,      label: "Home",       link: "/home"     },
   { icon: NewsIcon,      label: "News",        link: "/news"     },
   { icon: GamesIcon,     label: "Games",       link: "/games"    },
-  { icon: CommunityIcon, label: "Communities", link: "/services" },
+  { icon: CommunityIcon, label: "Communities", link: "/communities" },
   { icon: ProfileIcon,   label: "Profile",     link: "/profile"  },
 ];
 

@@ -167,6 +167,20 @@ const ChatArea = ({ roomId, channel }) => {
 
   const typingNames = Object.values(typingUsers);
 
+  /* ── INTERACTIVE CHAT UI HELPERS ── */
+  const formatDateLabel = (dateString) => {
+    const d = new Date(dateString);
+    const now = new Date();
+    
+    if (d.getDate() === now.getDate() && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) return "Today";
+    
+    const yest = new Date(now);
+    yest.setDate(now.getDate() - 1);
+    if (d.getDate() === yest.getDate() && d.getMonth() === yest.getMonth() && d.getFullYear() === yest.getFullYear()) return "Yesterday";
+    
+    return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  };
+
   return (
     <div className="chat-area-container">
       {/* HEADER */}
@@ -193,20 +207,37 @@ const ChatArea = ({ roomId, channel }) => {
       <div className="messages-feed" ref={scrollContainerRef}>
         {loading && <div className="chat-loader">Loading history...</div>}
         
-        {messages.map((msg, idx) => {
+        {messages.length === 0 && !loading && (
+          <div className="chat-empty-state">
+            <div className="chat-empty-icon">✧</div>
+            <h3>Welcome to #{channel}</h3>
+            <p>This is the start of a legendary conversation.<br/>Be the first to say hi!</p>
+          </div>
+        )}
+
+        {messages.map((msg, index) => {
+          const msgDate = new Date(msg.createdAt).toDateString();
+          const prevMsgDate = index > 0 ? new Date(messages[index - 1].createdAt).toDateString() : null;
+          const showDate = msgDate !== prevMsgDate;
+          
           const isOwn = msg.userId === user?._id;
-          // Determine if we show avatar (hide if sequential from same user)
-          const showAvatar = idx === 0 || messages[idx - 1].userId !== msg.userId;
+          const showAvatar = index === 0 || messages[index - 1].userId !== msg.userId || showDate;
 
           return (
-            <MessageItem 
-              key={msg._id || idx} 
-              message={msg} 
-              isOwn={isOwn} 
-              showAvatar={showAvatar}
-              socket={socket}
-              currentUserRole={user?.role}
-            />
+            <React.Fragment key={msg._id || index}>
+              {showDate && (
+                <div className="chat-date-separator">
+                  <span>{formatDateLabel(msg.createdAt)}</span>
+                </div>
+              )}
+              <MessageItem 
+                message={msg} 
+                isOwn={isOwn} 
+                showAvatar={showAvatar}
+                socket={socket}
+                currentUserRole={user?.role}
+              />
+            </React.Fragment>
           );
         })}
         <div ref={messagesEndRef} />

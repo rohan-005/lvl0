@@ -43,7 +43,9 @@ const MessageItem = ({ message, isOwn, showAvatar, socket, currentUserRole }) =>
             )}
           </div>
         ) : (
-          <div className="message-spacer"></div>
+          <div className="message-spacer">
+            <span className="msg-time-hover">{formatTime(message.createdAt)}</span>
+          </div>
         )}
       </div>
 

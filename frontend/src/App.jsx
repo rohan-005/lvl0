@@ -51,7 +51,7 @@ function App() {
               <Route path="/games" element={<Games />} />
               <Route path="/games/:id" element={<GameDetails />} />
               {/* NEW COMMUNITIES ROUTE */}
-              <Route path="/services" element={<Communities />} />
+              <Route path="/communities" element={<Communities />} />
             </Route>
           </Routes>
         </Router>

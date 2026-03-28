@@ -10,7 +10,7 @@ import "../../css/games.css";
 const menuItems = [
   { label: "Home", ariaLabel: "Go to home page", link: "/home" },
   { label: "News", ariaLabel: "Go to news page", link: "/news" },
-  { label: "Communities", ariaLabel: "View communities", link: "/services" },
+  { label: "Communities", ariaLabel: "View communities", link: "/communities" },
   { label: "Games Data", ariaLabel: "View games data", link: "/games" },
   { label: "Profile", ariaLabel: "View profile", link: "/profile" },
 ];
