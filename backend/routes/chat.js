@@ -60,6 +60,23 @@ router.post("/upload", protect, upload.single("attachment"), (req, res) => {
   res.json({ url: `/uploads/${req.file.filename}` });
 });
 
+// @route   GET /api/chat/users
+// @desc    Get platform user directory for DM search / Right Sidebar
+// @access  Private
+router.get("/users", protect, async (req, res) => {
+  try {
+    const users = await User.find({})
+      .select("name email role accountType createdAt")
+      .sort({ createdAt: -1 })
+      .limit(100); 
+
+    res.json(users);
+  } catch (err) {
+    console.error("Failed to fetch user directory:", err);
+    res.status(500).json({ message: "Server error fetching directory" });
+  }
+});
+
 // @route   GET /api/chat/rooms
 // @desc    Get all chatrooms, optionally seed defaults if empty
 router.get("/rooms", protect, async (req, res) => {

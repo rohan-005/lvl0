@@ -185,7 +185,7 @@ const Home = () => {
                     <div className="hp-identity-info">
                       <p className="hp-user-name">{user?.name}</p>
                       <p className="hp-user-role">{user?.role === "guest" ? "Guest" : user?.accountType?.toUpperCase()}</p>
-                      {!user?.isVerified && user?.role !== "guest" && <p className="hp-status-warn">⚠ UNVERIFIED</p>}
+                      {/* {!user?.isVerified && user?.role !== "guest" && <p className="hp-status-warn">⚠ UNVERIFIED</p>} */}
                     </div>
                   </div>
                   <div className="hp-identity-actions">
