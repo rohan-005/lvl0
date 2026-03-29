@@ -13,24 +13,42 @@ const Communities = () => {
   const [activeCategory, setActiveCategory] = useState("gamer"); // 'gamer' || 'developer'
   const [activeChannel, setActiveChannel] = useState("general");
   const [rooms, setRooms] = useState([]);
-  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [directoryUsers, setDirectoryUsers] = useState([]);
+  const [userSearch, setUserSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
 
-  // Fetch Rooms
+  // Fetch Rooms & Directory Users
   useEffect(() => {
     const fetchRooms = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}/api/chat/rooms`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setRooms(res.data);
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        
+        const [roomsRes, usersRes] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}/api/chat/rooms`, { headers }),
+          axios.get(`${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}/api/chat/users`, { headers })
+        ]);
+        
+        setRooms(roomsRes.data);
+        setDirectoryUsers(usersRes.data);
       } catch (err) {
-        console.error("Failed to fetch rooms", err);
+        console.error("Failed to fetch chat data", err);
       }
     };
     fetchRooms();
   }, []);
+
+  const filteredUsers = directoryUsers.filter(u => 
+    u.name.toLowerCase().includes(userSearch.toLowerCase())
+  );
+
+  const getAvatar = (u) => {
+    const seed = u?.email || u?.name || "guest";
+    let style  = "identicon";
+    if (u?.accountType === "developer") style = "bottts-neutral";
+    else if (u?.accountType === "gamer") style = "pixel-art";
+    return `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
+  };
 
   useEffect(() => {
     if (!socket) return;
@@ -112,19 +130,49 @@ const Communities = () => {
         {/* RIGHT SIDEBAR: ACTIVE USERS */}
         <div className="chat-sidebar-right">
           <div className="sidebar-header">
-            <h3>ONLINE — {onlineUsers.length || 1}</h3>
+            <h3>MEMBERS — {filteredUsers.length}</h3>
           </div>
+
+          <div className="dm-search-container">
+            <span className="search-icon">🔍</span>
+            <input 
+              type="text" 
+              placeholder="Search to DM..." 
+              value={userSearch}
+              onChange={(e) => setUserSearch(e.target.value)}
+              className="dm-search-input"
+            />
+          </div>
+
           <div className="active-users-list">
-            <div className="user-row">
+            <h4 className="directory-subheader">YOU</h4>
+            <div className="user-row sticky-user">
               <div className="user-avatar default-avatar">
-                {user?.name?.charAt(0).toUpperCase() || "U"}
+                {user ? <img src={getAvatar(user)} alt="avatar" /> : "U"}
               </div>
               <div className="user-info">
-                <span className="user-name">{user?.name || "You"}</span>
+                <span className="user-name">{user?.name || "Guest"}</span>
                 <span className="user-role">{user?.role || "user"}</span>
               </div>
             </div>
-            {/* Additional mock users could map here */}
+
+            <h4 className="directory-subheader mt-4">RECENTLY JOINED</h4>
+            {filteredUsers.filter(u => u._id !== user?._id).map(u => (
+              <div className="user-row directory-user" key={u._id} onClick={() => alert(`Direct Messaging features coming soon to chat with ${u.name}!`)}>
+                <div className="user-avatar">
+                  <img src={getAvatar(u)} alt="avatar" />
+                  <div className={`status-dot ${u.role === "admin" ? "admin" : ""}`}></div>
+                </div>
+                <div className="user-info">
+                  <span className="user-name">{u.name}</span>
+                  <span className="user-role">{u.accountType === "developer" ? "Developer" : "Gamer"}</span>
+                </div>
+              </div>
+            ))}
+            
+            {filteredUsers.length === 0 && (
+              <div className="directory-empty">No users found.</div>
+            )}
           </div>
         </div>
 
