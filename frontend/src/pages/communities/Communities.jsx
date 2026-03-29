@@ -56,8 +56,11 @@ const Communities = () => {
   };
 
   const startDM = (targetUser) => {
-    // Generate a consistent DM channel ID (sorted to avoid duplicates like A-B vs B-A)
-    const dmChannel = [user._id, targetUser._id].sort().join("--");
+    if (!user || !targetUser) return;
+    // Generate a consistent DM channel ID (explicitly stringify to ensure sort reliability)
+    const u1 = user._id.toString();
+    const u2 = targetUser._id.toString();
+    const dmChannel = [u1, u2].sort().join("--");
     
     // Add to recent DMs if not exists
     if (!recentDMs.find(d => d._id === targetUser._id)) {

@@ -19,6 +19,9 @@ export const SocketProvider = ({ children }) => {
       const url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
       const newSocket = io(url, {
         auth: { token },
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionAttempts: 10
       });
 
       setSocket(newSocket);

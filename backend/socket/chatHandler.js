@@ -58,18 +58,19 @@ module.exports = (io) => {
         });
 
         const roomKey = `${roomId}:${channel}`;
+        // Multi-emit to ensure delivery (room and individual personal rooms)
         io.to(roomKey).emit("message:receive", newMessage);
 
-        // If it's a DM, notify the recipient's personal room as well
+        // If it's a DM, ensure we target both participants specifically in their private rooms
         if (roomId === "dm" || channel.includes("--")) {
            const participants = channel.split("--");
-           const recipientId = participants.find(id => id !== socket.user._id.toString());
-           if (recipientId) {
-             io.to(recipientId).emit("dm:received", {
+           participants.forEach(pId => {
+             // Notify both (sender gets it as confirmation, recipient as alert)
+             io.to(pId).emit("dm:received", {
                from: socket.user,
                message: newMessage
              });
-           }
+           });
         }
       } catch (err) {
         console.error("Failed to send message", err);
