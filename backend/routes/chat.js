@@ -66,7 +66,7 @@ router.post("/upload", protect, upload.single("attachment"), (req, res) => {
 router.get("/users", protect, async (req, res) => {
   try {
     const users = await User.find({})
-      .select("name email role accountType createdAt")
+      .select("_id name email role accountType createdAt")
       .sort({ createdAt: -1 })
       .limit(100); 
 

@@ -21,6 +21,17 @@ const Communities = () => {
   const [userSearch, setUserSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
 
+  // Helper to reliably get an ID (handles _id or id)
+  const getUserId = (u) => u?._id || u?.id;
+  
+  // Helper to format DM channel key consistently
+  const getDMChannel = (u1, u2) => {
+    const id1 = getUserId(u1)?.toString();
+    const id2 = getUserId(u2)?.toString();
+    if (!id1 || !id2) return null;
+    return [id1, id2].sort().join("--");
+  };
+
   // Fetch Rooms & Directory Users
   useEffect(() => {
     const fetchRooms = async () => {
@@ -56,14 +67,12 @@ const Communities = () => {
   };
 
   const startDM = (targetUser) => {
-    if (!user || !targetUser) return;
-    // Generate a consistent DM channel ID (explicitly stringify to ensure sort reliability)
-    const u1 = user._id.toString();
-    const u2 = targetUser._id.toString();
-    const dmChannel = [u1, u2].sort().join("--");
+    const dmChannel = getDMChannel(user, targetUser);
+    if (!dmChannel) return;
     
     // Add to recent DMs if not exists
-    if (!recentDMs.find(d => d._id === targetUser._id)) {
+    const tId = getUserId(targetUser);
+    if (!recentDMs.find(d => getUserId(d) === tId)) {
       const updated = [targetUser, ...recentDMs].slice(0, 10);
       setRecentDMs(updated);
       localStorage.setItem("recentDMs", JSON.stringify(updated));
@@ -165,8 +174,8 @@ const Communities = () => {
             <ul className="channel-list">
               {recentDMs.map(dm => (
                 <li 
-                  key={dm._id}
-                  className={activeCategory === "dm" && activeChannel === [user._id, dm._id].sort().join("--") ? "active-channel" : ""}
+                  key={getUserId(dm)}
+                  className={activeCategory === "dm" && activeChannel === getDMChannel(user, dm) ? "active-channel" : ""}
                   onClick={() => startDM(dm)}
                 >
                   @ {dm.name}
@@ -184,7 +193,7 @@ const Communities = () => {
           <ChatArea 
             roomId={activeCategory} 
             channel={formatChannel(activeChannel)} 
-            dmUser={activeCategory === "dm" ? recentDMs.find(d => [user._id, d._id].sort().join("--") === activeChannel) : null}
+            dmUser={activeCategory === "dm" ? recentDMs.find(d => getDMChannel(user, d) === activeChannel) : null}
           />
         </div>
 
