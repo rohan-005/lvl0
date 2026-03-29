@@ -24,12 +24,12 @@ module.exports = (io) => {
     console.log(`User connected: ${socket.user.name} (${socket.id})`);
 
     // --- Join/Leave Rooms ---
+    // Join a personal room for global notifications (matching userId)
+    socket.join(socket.user._id.toString());
+
     socket.on("room:join", ({ roomId, channel }) => {
       const roomKey = `${roomId}:${channel}`;
       socket.join(roomKey);
-      
-      // Optionally notify room that user joined
-      // io.to(roomKey).emit("user:joined", { userId: socket.user._id, username: socket.user.name });
     });
 
     socket.on("room:leave", ({ roomId, channel }) => {
@@ -59,6 +59,18 @@ module.exports = (io) => {
 
         const roomKey = `${roomId}:${channel}`;
         io.to(roomKey).emit("message:receive", newMessage);
+
+        // If it's a DM, notify the recipient's personal room as well
+        if (roomId === "dm" || channel.includes("--")) {
+           const participants = channel.split("--");
+           const recipientId = participants.find(id => id !== socket.user._id.toString());
+           if (recipientId) {
+             io.to(recipientId).emit("dm:received", {
+               from: socket.user,
+               message: newMessage
+             });
+           }
+        }
       } catch (err) {
         console.error("Failed to send message", err);
         socket.emit("error:general", { message: "Failed to send message" });

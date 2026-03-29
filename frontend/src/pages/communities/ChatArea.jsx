@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import MessageItem from "./MessageItem";
 import axios from "axios";
 
-const ChatArea = ({ roomId, channel }) => {
+const ChatArea = ({ roomId, channel, dmUser }) => {
   const socket = useSocket();
   const { user } = useAuth();
   
@@ -185,8 +185,8 @@ const ChatArea = ({ roomId, channel }) => {
     <div className="chat-area-container">
       {/* HEADER */}
       <div className="chat-header">
-        <span className="hash">#</span>
-        <h3>{channel}</h3>
+        <span className="hash">{roomId === "dm" ? "@" : "#"}</span>
+        <h3>{roomId === "dm" ? (dmUser?.name || "Private Chat") : channel}</h3>
         {pinned.length > 0 && (
           <div className="pinned-indicator">
             📌 {pinned.length} Pinned
@@ -209,9 +209,11 @@ const ChatArea = ({ roomId, channel }) => {
         
         {messages.length === 0 && !loading && (
           <div className="chat-empty-state">
-            <div className="chat-empty-icon">✧</div>
-            <h3>Welcome to #{channel}</h3>
-            <p>This is the start of a legendary conversation.<br/>Be the first to say hi!</p>
+            <div className="chat-empty-icon">{roomId === "dm" ? "💬" : "✧"}</div>
+            <h3>{roomId === "dm" ? `Chatting with ${dmUser?.name || "this user"}` : `Welcome to #${channel}`}</h3>
+            <p>{roomId === "dm" 
+                ? "This is the beginning of your private conversation." 
+                : "This is the start of a legendary conversation."}<br/>Be the first to say hi!</p>
           </div>
         )}
 

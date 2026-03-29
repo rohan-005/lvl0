@@ -2,13 +2,14 @@
    COMMUNITIES PAGE
    ===================== */
    .communities-page {
-    height: calc(100vh - 80px); /* Fill standard frame minus nav overhead */
-    padding: 24px;
+    height: 100vh;
+    width: calc(100% - 65px);
+    margin-left: 65px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
   }
-  
   
   .chat-layout {
     display: grid;
@@ -19,9 +20,9 @@
     overflow: hidden;
     background: rgba(10, 15, 25, 0.6);
     backdrop-filter: blur(25px);
-    border: 1px solid rgba(246, 48, 73, 0.15);
-    border-radius: 20px;
-    box-shadow: 0 10px 50px rgba(0,0,0,0.6), inset 0 0 20px rgba(246, 48, 73, 0.05);
+    border: none; /* Removed border for the "complete" feel */
+    border-radius: 0; /* Full screen, so no rounded corners on the page container? or maybe just flush? */
+    /* Let's keep a slight internal border or none */
   }
   
   /* =====================
