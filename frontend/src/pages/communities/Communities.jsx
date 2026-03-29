@@ -28,9 +28,10 @@ const Communities = () => {
         const token = localStorage.getItem("token");
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
         
+        const url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
         const [roomsRes, usersRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}/api/chat/rooms`, { headers }),
-          axios.get(`${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}/api/chat/users`, { headers })
+          axios.get(`${url}/api/chat/rooms`, { headers }),
+          axios.get(`${url}/api/chat/users`, { headers })
         ]);
         
         setRooms(roomsRes.data);

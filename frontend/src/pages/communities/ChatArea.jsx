@@ -28,8 +28,9 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
+        const url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
         const res = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}/api/chat/${roomId}/${channel}?limit=50`,
+          `${url}/api/chat/${roomId}/${channel}?limit=50`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setMessages(res.data.messages || []);
@@ -125,8 +126,9 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
       
       try {
         const token = localStorage.getItem("token");
+        const url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
         const res = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}/api/chat/upload`,
+          `${url}/api/chat/upload`,
           formData,
           { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } }
         );

@@ -16,7 +16,8 @@ export const SocketProvider = ({ children }) => {
     // Only connect if user is authenticated
     if (user) {
       const token = localStorage.getItem("token");
-      const newSocket = io(import.meta.env.VITE_API_URL || "https://lvl0.onrender.com", {
+      const url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+      const newSocket = io(url, {
         auth: { token },
       });
 
