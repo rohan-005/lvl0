@@ -73,10 +73,8 @@ const Communities = () => {
     if (!socket) return;
     
     // Join room when category/channel changes
-    const fetchTarget = activeCategory === "dm" ? activeChannel : activeCategory;
     const formattedChannel = formatChannel(activeChannel);
-    
-    socket.emit("room:join", { roomId: fetchTarget, channel: formattedChannel });
+    socket.emit("room:join", { roomId: activeCategory, channel: formattedChannel });
 
     // Handle Incoming DM Notification
     const handleDMReceived = ({ from, message }) => {
@@ -95,7 +93,7 @@ const Communities = () => {
     socket.on("dm:received", handleDMReceived);
 
     return () => {
-      socket.emit("room:leave", { roomId: fetchTarget, channel: formattedChannel });
+      socket.emit("room:leave", { roomId: activeCategory, channel: formattedChannel });
       socket.off("dm:received", handleDMReceived);
     };
   }, [socket, activeCategory, activeChannel]);
