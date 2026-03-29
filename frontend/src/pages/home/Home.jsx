@@ -5,6 +5,7 @@ import axios from "axios";
 import "../../css/home.css";
 import Button from "../../ui_components/Button";
 import HomeNews from "./HomeNews";
+import { useAuth } from "../../context/AuthContext";
 import { fetchGames } from "../../utils/gamesApi";
 
 /* ═══════════════ NAV ICONS ═══════════════ */
@@ -70,25 +71,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   /* ── Auth ── */
-  const [user,           setUser]           = useState(null);
-  const [loadingProfile, setLoadingProfile] = useState(true);
-
-  /* ── Games ── */
-  const [games,        setGames]       = useState([]);
-  const [loadingGames, setLoadingGames] = useState(true);
-  const [activeGenre,  setActiveGenre] = useState(GENRE_FILTERS[0]);
-
-  /* ── Feed filter ── */
-  const [activeFeed, setActiveFeed] = useState("All");
-
-  /* ── Trending Communities ── */
-  const [trendingRooms, setTrendingRooms] = useState([]);
-  const [loadingRooms, setLoadingRooms] = useState(true);
-
-  /* ── News mini strip (bottom card) — pulled from HomeNews via prop ── */
-  const [newsHeadlines, setNewsHeadlines] = useState([]);
-
-  const guestUser = { name: "Guest", role: "guest", email: null, accountType: null, isVerified: false };
+  const { user, loading: loadingProfile } = useAuth();
 
   const getAvatarUrl = (u) => {
     const seed = u?.email || u?.name || "guest";
@@ -98,22 +81,9 @@ const Home = () => {
     return `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
   };
 
-  /* ── Fetch profile ── */
-  useEffect(() => {
-    (async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) { setUser(guestUser); return; }
-        const res  = await fetch("/api/auth/me", { headers: { Authorization: `Bearer ${token}` } });
-        if (!res.ok) { localStorage.removeItem("token"); setUser(guestUser); return; }
-        const data = await res.json();
-        setUser({ name: data.name, email: data.email, role: data.role, accountType: data.accountType, isVerified: data.isVerified });
-      } catch { setUser(guestUser); }
-      finally  { setLoadingProfile(false); }
-    })();
-  }, []);
-
-  /* ── Fetch games ── */
+  /* ── Games ── */
+  const [games,        setGames]       = useState([]);
+  const [loadingGames, setLoadingGames] = useState(true);
   const loadGames = async (genreId) => {
     setLoadingGames(true);
     try {

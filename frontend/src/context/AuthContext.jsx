@@ -142,6 +142,11 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
   /* =========================
      CONTEXT VALUE
      ========================= */
@@ -151,6 +156,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    updateUser,
     forgotPassword,
     verifyPasswordResetOTP,
     resetPassword,
