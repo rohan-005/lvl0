@@ -84,6 +84,18 @@ const Home = () => {
   /* ── Games ── */
   const [games,        setGames]       = useState([]);
   const [loadingGames, setLoadingGames] = useState(true);
+  const [activeGenre,  setActiveGenre] = useState(GENRE_FILTERS[0]);
+
+  /* ── Feed filter ── */
+  const [activeFeed, setActiveFeed] = useState("All");
+
+  /* ── Trending Communities ── */
+  const [trendingRooms, setTrendingRooms] = useState([]);
+  const [loadingRooms, setLoadingRooms] = useState(true);
+
+  /* ── News mini strip (bottom card) — pulled from HomeNews via prop ── */
+  const [newsHeadlines, setNewsHeadlines] = useState([]);
+
   const loadGames = async (genreId) => {
     setLoadingGames(true);
     try {
