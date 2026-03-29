@@ -20,6 +20,7 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
   const scrollContainerRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const fileInputRef = useRef(null);
+  const isInitialLoad = useRef(true);
 
   // Fetch initial history
   useEffect(() => {
@@ -33,7 +34,8 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
         );
         setMessages(res.data.messages || []);
         setPinned(res.data.pinnedMessages || []);
-        scrollToBottom();
+        // Use timeout to ensure DOM is rendered before scrolling
+        setTimeout(() => scrollToBottom(true), 100);
       } catch (err) {
         console.error("Failed to fetch chat history", err);
       } finally {
@@ -98,8 +100,10 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
     };
   }, [socket, user]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (instant = false) => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: instant ? "auto" : "smooth" });
+    }
   };
 
   const handleFileSelect = (e) => {

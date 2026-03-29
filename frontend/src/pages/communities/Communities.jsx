@@ -14,6 +14,9 @@ const Communities = () => {
   const [activeChannel, setActiveChannel] = useState("general");
   const [rooms, setRooms] = useState([]);
   const [directoryUsers, setDirectoryUsers] = useState([]);
+
+  const formatChannel = (name) => name.toLowerCase().replace(/\s+/g, "-");
+  
   const [recentDMs, setRecentDMs] = useState(JSON.parse(localStorage.getItem("recentDMs") || "[]"));
   const [userSearch, setUserSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -71,7 +74,9 @@ const Communities = () => {
     
     // Join room when category/channel changes
     const fetchTarget = activeCategory === "dm" ? activeChannel : activeCategory;
-    socket.emit("room:join", { roomId: fetchTarget, channel: activeChannel.toLowerCase() });
+    const formattedChannel = formatChannel(activeChannel);
+    
+    socket.emit("room:join", { roomId: fetchTarget, channel: formattedChannel });
 
     // Handle Incoming DM Notification
     const handleDMReceived = ({ from, message }) => {
@@ -90,7 +95,7 @@ const Communities = () => {
     socket.on("dm:received", handleDMReceived);
 
     return () => {
-      socket.emit("room:leave", { roomId: fetchTarget, channel: activeChannel.toLowerCase() });
+      socket.emit("room:leave", { roomId: fetchTarget, channel: formattedChannel });
       socket.off("dm:received", handleDMReceived);
     };
   }, [socket, activeCategory, activeChannel]);
@@ -176,7 +181,7 @@ const Communities = () => {
         <div className="chat-center">
           <ChatArea 
             roomId={activeCategory} 
-            channel={activeChannel.toLowerCase().replace(" ", "-")} 
+            channel={formatChannel(activeChannel)} 
             dmUser={activeCategory === "dm" ? recentDMs.find(d => [user._id, d._id].sort().join("--") === activeChannel) : null}
           />
         </div>
