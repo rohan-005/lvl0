@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "./AuthContext"; // Assuming AuthContext provides user state
+import { API_CONFIG } from "../config/apiConfig";
 
 const SocketContext = createContext();
 
@@ -16,7 +17,7 @@ export const SocketProvider = ({ children }) => {
     // Only connect if user is authenticated
     if (user) {
       const token = localStorage.getItem("token");
-      const url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+      const url = API_CONFIG.CHAT_SERVICE_URL;
       const newSocket = io(url, {
         auth: { token },
         transports: ["websocket", "polling"],

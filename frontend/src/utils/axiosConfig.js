@@ -1,11 +1,10 @@
 import axios from "axios";
-
-const API_URL =
-  import.meta.env.VITE_API_URL?.replace(/\/$/, "") ||
-  "https://lvl0.onrender.com/api";
+import { API_CONFIG } from "../config/apiConfig";
 
 const api = axios.create({
-  baseURL: API_URL.endsWith("/api") ? API_URL : `${API_URL}/api`,
+  baseURL: API_CONFIG.USER_SERVICE_URL.endsWith("/api")
+    ? API_CONFIG.USER_SERVICE_URL
+    : `${API_CONFIG.USER_SERVICE_URL}/api`,
   headers: {
     "Content-Type": "application/json",
   },

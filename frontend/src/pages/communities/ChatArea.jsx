@@ -3,6 +3,7 @@ import { useSocket } from "../../context/SocketContext";
 import { useAuth } from "../../context/AuthContext";
 import MessageItem from "./MessageItem";
 import axios from "axios";
+import { API_CONFIG } from "../../config/apiConfig";
 
 const ChatArea = ({ roomId, channel, dmUser }) => {
   const socket = useSocket();
@@ -28,7 +29,7 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+        const url = API_CONFIG.CHAT_SERVICE_URL;
         const res = await axios.get(
           `${url}/api/chat/${roomId}/${channel}?limit=50`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -126,7 +127,7 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
       
       try {
         const token = localStorage.getItem("token");
-        const url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+        const url = API_CONFIG.CHAT_SERVICE_URL;
         const res = await axios.post(
           `${url}/api/chat/upload`,
           formData,

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { API_CONFIG } from "../../config/apiConfig";
 import { useSocket } from "../../context/SocketContext";
 import { useAuth } from "../../context/AuthContext";
 import ChatArea from "./ChatArea";
@@ -39,7 +40,7 @@ const Communities = () => {
         const token = localStorage.getItem("token");
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
         
-        const url = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+        const url = API_CONFIG.CHAT_SERVICE_URL;
         const [roomsRes, usersRes] = await Promise.all([
           axios.get(`${url}/api/chat/rooms`, { headers }),
           axios.get(`${url}/api/chat/users`, { headers })

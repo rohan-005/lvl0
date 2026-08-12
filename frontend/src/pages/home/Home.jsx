@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_CONFIG } from "../../config/apiConfig";
 import "../../css/home.css";
 import Button from "../../ui_components/Button";
 import HomeNews from "./HomeNews";
@@ -118,7 +119,7 @@ const Home = () => {
     (async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}/api/chat/rooms`, {
+        const res = await axios.get(`${API_CONFIG.CHAT_SERVICE_URL}/api/chat/rooms`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {}
         });
         // Select top 5 rooms as "trending"

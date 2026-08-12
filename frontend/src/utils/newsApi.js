@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API_CONFIG } from "../config/apiConfig";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:3000",
+  baseURL: API_CONFIG.NEWS_GAME_SERVICE_URL,
 });
 
 export const getNews = async (query, limit = 15) => {

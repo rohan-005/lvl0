@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { API_CONFIG } from "../../config/apiConfig";
 
 const CreateRoomModal = ({ onClose, onRoomCreated }) => {
   const [name, setName] = useState("");
@@ -17,7 +18,7 @@ const CreateRoomModal = ({ onClose, onRoomCreated }) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL || "https://lvl0.onrender.com"}/api/chat/rooms`,
+        `${API_CONFIG.CHAT_SERVICE_URL}/api/chat/rooms`,
         { name: name.trim(), category },
         { headers: { Authorization: `Bearer ${token}` } }
       );
