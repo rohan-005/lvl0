@@ -434,7 +434,7 @@
     width: 46px;
     height: 46px;
     border-radius: 12px; /* Gamer squircle instead of full circle */
-    background: linear-gradient(135deg, var(--accent-dim), #111F35);
+    background: linear-gradient(135deg, var(--accent-dim), var(--accent-brown));
     color: #fff;
     display: flex;
     align-items: center;
@@ -654,9 +654,10 @@
     position: absolute;
     bottom: 100%;
     left: 0;
-    background: #111F35;
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    background: var(--bg-card);
+    border: 2px solid var(--border-main);
+    box-shadow: 3px 3px 0px var(--border-main);
+    border-radius: 4px;
     display: flex;
     gap: 4px;
     padding: 8px;
@@ -879,11 +880,11 @@
   }
 
   .room-modal-content {
-    background: #111F35;
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    background: var(--bg-card);
+    border: 2px solid var(--border-main);
+    box-shadow: 4px 4px 0px var(--border-main);
     padding: 30px;
-    border-radius: 16px;
+    border-radius: 6px;
     width: 100%;
     max-width: 400px;
   }
@@ -963,7 +964,8 @@
     outline: none;
   }
   .input-group select option {
-    background: #111F35;
+    background: var(--bg-card);
+    color: var(--text-main);
   }
 
   .modal-actions {

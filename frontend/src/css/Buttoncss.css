@@ -1,14 +1,13 @@
-/* Inherits theme from App.css :root */
-
-/* Base */
+/* Base Button Styling — Warm Light Theme with Sharp Borders */
 .btn {
-  padding: 12px 28px;
-  border-radius: 10px;
+  padding: 12px 24px;
+  border-radius: 4px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  border: none;
-  transition: all 0.25s ease;
+  border: 2px solid var(--border-main);
+  box-shadow: 2px 2px 0px var(--border-main);
+  transition: all 0.15s ease-in-out;
   letter-spacing: 0.3px;
   display: inline-flex;
   align-items: center;
@@ -17,39 +16,50 @@
   margin: 5px 0;
 }
 
-/* Primary */
+/* Primary — Crimson Red with Sharp Border */
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  background: var(--accent);
   color: var(--text-on-accent);
+  border-color: var(--border-main);
 }
 
 .btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--accent-glow);
+  background: var(--accent-dark);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--border-main);
 }
 
-/* Secondary */
+.btn-primary:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--border-main);
+}
+
+/* Secondary — Warm Beige / White with Sharp Border */
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-dim);
-  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-main);
+  border-color: var(--border-main);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.14);
-  color: var(--text-main);
+  background: var(--bg-hover);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--border-main);
 }
 
-/* Danger */
+/* Danger — Deep Red */
 .btn-danger {
   background: var(--danger);
   color: white;
+  border-color: var(--border-main);
 }
 
 /* Disabled */
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none !important;
+  box-shadow: 1px 1px 0px var(--border-main) !important;
 }
 
 /* Loading */
@@ -117,23 +127,4 @@
   0% { opacity: 0; transform: translateX(-6px) rotate(-45deg); }
   50% { opacity: 1; }
   100% { opacity: 0; transform: translateX(6px) rotate(-45deg); }
-}
-
-/* ---------- SHINE EFFECT ---------- */
-.btn-loading::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.25),
-    transparent
-  );
-  animation: shine 1.4s infinite;
-}
-
-@keyframes shine {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
 }

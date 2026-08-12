@@ -1,34 +1,27 @@
-/* Inherits theme from App.css :root */
+/* Auth Pages Standalone Card (OTP & Forgot Password) — Warm Light Theme */
 
-/* =========================
-   BASE
-   ========================= */
 .auth-root {
   min-height: 100vh;
-  background: radial-gradient(circle at center right, rgba(142, 8, 59, 0.7), rgba(74, 1, 19, 0.3), var(--bg-dark));
+  background: var(--bg-main);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  color: white;
-  font-family: "Space Grotesk", sans-serif;
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 32px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--border-main);
+  border-radius: 6px;
+  padding: 36px;
+  box-shadow: 4px 4px 0px var(--border-main);
 }
 
-/* =========================
-   HEADER
-   ========================= */
 .auth-logo {
-  font-family: "Orbitron", sans-serif;
   font-size: 2.1rem;
   font-weight: 900;
   color: var(--accent);
@@ -37,14 +30,11 @@
 
 .auth-sub {
   text-align: center;
-  color: var(--text-dim);
-  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
   margin: 8px 0 26px;
 }
 
-/* =========================
-   FORM
-   ========================= */
 .auth-card form {
   display: flex;
   flex-direction: column;
@@ -52,23 +42,21 @@
 }
 
 .auth-card input {
-  background: var(--bg-input);
-  border: 1px solid var(--border);
+  background: var(--bg-cream);
+  border: 2px solid var(--border-main);
   padding: 12px 14px;
-  border-radius: 10px;
-  color: white;
-  font-size: 0.9rem;
+  border-radius: 4px;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .auth-card input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 12px var(--accent-glow);
+  box-shadow: 2px 2px 0px var(--border-main);
 }
 
-/* =========================
-   RADIO BUTTONS
-   ========================= */
 .radio-group {
   display: flex;
   gap: 12px;
@@ -76,14 +64,16 @@
 
 .radio-card {
   flex: 1;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border: 2px solid var(--border-main);
+  border-radius: 4px;
+  background: var(--bg-cream);
   padding: 14px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.25s ease;
-  color: var(--text-dim);
-  font-size: 0.85rem;
+  transition: all 0.15s ease;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .radio-card input {
@@ -91,23 +81,29 @@
 }
 
 .radio-card.active {
-  border-color: var(--accent);
-  color: var(--accent);
-  box-shadow: 0 0 18px var(--accent-glow);
+  border-color: var(--border-main);
+  background: var(--accent);
+  color: var(--text-on-accent);
+  box-shadow: 2px 2px 0px var(--border-main);
 }
 
-/* =========================
-   BUTTON
-   ========================= */
 .auth-btn {
   margin-top: 10px;
   padding: 14px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  border: none;
-  font-weight: 700;
+  border-radius: 4px;
+  background: var(--accent);
+  border: 2px solid var(--border-main);
+  box-shadow: 2px 2px 0px var(--border-main);
+  font-weight: 800;
   cursor: pointer;
   color: var(--text-on-accent);
+  transition: all 0.15s ease;
+}
+
+.auth-btn:hover:not(:disabled) {
+  background: var(--accent-dark);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--border-main);
 }
 
 .auth-btn:disabled {
@@ -115,45 +111,18 @@
   cursor: not-allowed;
 }
 
-/* =========================
-   LINKS
-   ========================= */
 .auth-link {
   margin-top: 18px;
   text-align: center;
-  font-size: 0.8rem;
-  color: var(--text-dim);
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 .auth-link a {
   color: var(--accent);
+  font-weight: 700;
   text-decoration: underline;
 }
-
-/* =========================
-   RESPONSIVE
-   ========================= */
-@media (max-width: 480px) {
-  .auth-card {
-    padding: 24px;
-  }
-
-  .auth-logo {
-    font-size: 1.8rem;
-  }
-
-  .radio-group {
-    flex-direction: column;
-  }
-
-  .radio-card {
-    padding: 12px;
-  }
-}
-
-/* =========================
-   OTP VERIFICATION
-   ========================= */
 
 .otp-group {
   display: flex;
@@ -165,32 +134,28 @@
 .otp-input {
   width: 48px;
   height: 56px;
-  background: var(--bg-input);
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
+  background: var(--bg-cream);
+  border: 2px solid var(--border-main);
+  border-radius: 4px;
   text-align: center;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--accent);
-  font-family: "JetBrains Mono", monospace;
-  transition: all 0.2s ease;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--border-main);
+  transition: all 0.15s ease;
 }
 
 .otp-input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 14px var(--accent-glow);
+  box-shadow: 2px 2px 0px var(--border-main);
   transform: translateY(-2px);
 }
-
-/* =========================
-   OTP ACTION LINKS
-   ========================= */
 
 .auth-link button {
   background: none;
   border: none;
-  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
   cursor: pointer;
   padding: 0;
 }
@@ -200,18 +165,25 @@
   cursor: not-allowed;
 }
 
-/* =========================
-   MOBILE OTP TWEAKS
-   ========================= */
-
 @media (max-width: 480px) {
+  .auth-card {
+    padding: 24px;
+  }
+  .auth-logo {
+    font-size: 1.8rem;
+  }
+  .radio-group {
+    flex-direction: column;
+  }
+  .radio-card {
+    padding: 12px;
+  }
   .otp-group {
     gap: 8px;
   }
-
   .otp-input {
     width: 44px;
     height: 52px;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 }

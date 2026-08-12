@@ -212,15 +212,16 @@ body {
    SHARED CARD
 ═══════════════════════════════════════ */
 .hp-card {
-  background: rgba(8, 11, 20, 0.88);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  background: var(--bg-card);
+  border: 2px solid var(--border-main);
+  box-shadow: 3px 3px 0px var(--border-main);
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   transition: border-color 0.18s;
 }
-.hp-card:hover { border-color: rgba(251, 54, 64, 0.22); }
+.hp-card:hover { border-color: var(--accent); }
 
 .hp-card-header {
   display: flex;

@@ -2,6 +2,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { getNews } from "../../utils/newsApi";
 import { getNewsImage } from "../../utils/newsImage";
+import toast from "react-hot-toast";
 import "../../css/news.css";
 
 /* =====================
@@ -137,7 +138,7 @@ const News = () => {
   const shareArticle = (url, type) => {
     if (type === "copy") {
       navigator.clipboard.writeText(url);
-      alert("Link copied!");
+      toast.success("Link copied to clipboard!");
     } else if (type === "twitter") {
       window.open(`https://twitter.com/intent/tweet?url=${url}`, "_blank");
     }

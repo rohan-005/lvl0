@@ -1,45 +1,71 @@
 @import "tailwindcss";
 
 /* ============================================================
-   LVL0 — GLOBAL THEME
-   Primary Palette:
-     --accent:       #F63049  (vivid crimson red)
-     --accent-dark:  #D02752  (deep rose)
-     --accent-shade: #8A244B  (muted burgundy)
-     --bg-dark:      #111F35  (dark navy background)
+   LVL0 — GLOBAL WARM LIGHT THEME
+   Palette:
+     White:      #FFFFFF
+     Cream:      #FDFBF7 / #FAF6EE
+     Beige:      #F3EBE1 / #E8DDD0
+     Brown:      #4A2E2B / #3D241D
+     Dark Brown: #2B1704 / #1C0F02 (Text & Sharp Borders)
+     Red:        #C82333 / #A01B28
    ============================================================ */
 
 :root {
-  /* — Brand Colors — */
-  --accent:          #Fb3640;
-  --accent-dark:     #770522;
-  --accent-shade:    #8A244B;
-  --bg-dark:         #03070e;
+  /* — Core Brand Palette — */
+  --bg-main:         #FDFBF7;
+  --bg-cream:        #FAF6EE;
+  --bg-beige:        #F3EBE1;
+  --bg-card:         #FFFFFF;
+  --bg-secondary:    #F5EFEB;
+  --bg-hover:        #EFE6DD;
+  --bg-dark-accent:  #3D241D;
 
-  /* — Derived / Utility — */
-  --accent-dim:      rgba(246, 48, 73, 0.15);
-  --accent-glow:     rgba(246, 48, 73, 0.30);
-  --accent-soft:     rgba(208, 39, 82, 0.60);
+  /* — Sharp Borders & Lines — */
+  --border:          #2B1704;
+  --border-main:     #2B1704;
+  --border-subtle:   #D4C4B5;
+  --border-accent:   #C82333;
 
-  /* — Backgrounds — */
-  --bg-main:         radial-gradient(circle at center right, rgba(120, 5, 24, 0.856), rgb(0, 0, 0), var(--bg-dark));
-  --bg-card:         rgba(5, 9, 16, 0.95);
-  --bg-glass:        rgba(61, 62, 63, 0.8);
-  --bg-input:        rgba(255, 255, 255, 0.04);
+  /* — Typography (Dark Brown Text) — */
+  --text-main:       #2B1704;
+  --text-dark:       #1C0F02;
+  --text-muted:      #5E4636;
+  --text-dim:        #8C6D58;
+  --text-light:      #FDFBF7;
+  --text-on-accent:  #FFFFFF;
 
-  /* — Borders — */
-  --border:          rgba(255, 255, 255, 0.10);
-  --border-accent:   rgba(246, 48, 73, 0.40);
+  /* — Accents — */
+  --accent:          #C82333;
+  --accent-dark:     #A01B28;
+  --accent-shade:    #4A2E2B;
+  --accent-brown:    #4A2E2B;
+  --accent-cream:    #F5EFEB;
+  --accent-dim:      rgba(200, 35, 51, 0.10);
+  --accent-glow:     rgba(200, 35, 51, 0.20);
+  --accent-soft:     #E8DDD0;
+  --bg-dark:         #2B1704;
+  --bg-glass:        rgba(253, 251, 247, 0.95);
+  --bg-input:        #FFFFFF;
 
-  /* — Text — */
-  --text-main:       #ffffff;
-  --text-dim:        #8da0b8;
-  --text-muted:      #6b7f96;
-  --text-on-accent:  #ffffff;
-
-  /* — Danger / Status — */
-  --danger:          #ff4d6d;
-  --success:         #00c97b;
-  --warning:         #ffb703;
+  /* — Status Colors — */
+  --danger:          #D9383A;
+  --success:         #2E7D32;
+  --warning:         #D97706;
 }
 
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Sharp Card Base Utility */
+.sharp-card {
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-main);
+  box-shadow: 3px 3px 0px var(--border-main);
+  border-radius: 4px;
+}
