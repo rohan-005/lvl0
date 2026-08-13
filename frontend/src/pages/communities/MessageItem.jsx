@@ -67,17 +67,17 @@ const MessageItem = ({ message, isOwn, showAvatar, socket, currentUserRole }) =>
             <div className="message-attachment">
               {message.attachmentUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
                 <img 
-                  src={`${API_CONFIG.CHAT_SERVICE_URL}${message.attachmentUrl}`} 
+                  src={`${API_CONFIG.GATEWAY_URL}${message.attachmentUrl}`} 
                   alt="attachment" 
                   loading="lazy" 
                 />
               ) : message.attachmentUrl.match(/\.(mp4|webm|ogg)$/i) ? (
                 <video 
                   controls 
-                  src={`${API_CONFIG.CHAT_SERVICE_URL}${message.attachmentUrl}`} 
+                  src={`${API_CONFIG.GATEWAY_URL}${message.attachmentUrl}`} 
                 />
               ) : (
-                <a href={`${API_CONFIG.CHAT_SERVICE_URL}${message.attachmentUrl}`} target="_blank" rel="noreferrer" className="attachment-link">
+                <a href={`${API_CONFIG.GATEWAY_URL}${message.attachmentUrl}`} target="_blank" rel="noreferrer" className="attachment-link">
                   📎 View Attachment
                 </a>
               )}

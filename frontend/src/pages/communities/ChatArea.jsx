@@ -29,7 +29,7 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const url = API_CONFIG.CHAT_SERVICE_URL;
+        const url = API_CONFIG.GATEWAY_URL;
         const res = await axios.get(
           `${url}/api/chat/${roomId}/${channel}?limit=50`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -127,7 +127,7 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
       
       try {
         const token = localStorage.getItem("token");
-        const url = API_CONFIG.CHAT_SERVICE_URL;
+        const url = API_CONFIG.GATEWAY_URL;
         const res = await axios.post(
           `${url}/api/chat/upload`,
           formData,

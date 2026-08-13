@@ -18,7 +18,7 @@ const CreateRoomModal = ({ onClose, onRoomCreated }) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        `${API_CONFIG.CHAT_SERVICE_URL}/api/chat/rooms`,
+        `${API_CONFIG.GATEWAY_URL}/api/chat/rooms`,
         { name: name.trim(), category },
         { headers: { Authorization: `Bearer ${token}` } }
       );

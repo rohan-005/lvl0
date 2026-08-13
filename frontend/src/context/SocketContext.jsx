@@ -18,7 +18,7 @@ export const SocketProvider = ({ children }) => {
     // Only connect if user is authenticated
     if (user) {
       const token = localStorage.getItem("token");
-      const url = API_CONFIG.CHAT_SERVICE_URL;
+      const url = API_CONFIG.GATEWAY_URL;
       const newSocket = io(url, {
         auth: { token },
         transports: ["websocket", "polling"],

@@ -119,7 +119,7 @@ const Home = () => {
     (async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`${API_CONFIG.CHAT_SERVICE_URL}/api/chat/rooms`, {
+        const res = await axios.get(`${API_CONFIG.GATEWAY_URL}/api/chat/rooms`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {}
         });
         // Select top 5 rooms as "trending"

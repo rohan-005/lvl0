@@ -40,7 +40,7 @@ const Communities = () => {
         const token = localStorage.getItem("token");
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
         
-        const url = API_CONFIG.CHAT_SERVICE_URL;
+        const url = API_CONFIG.GATEWAY_URL;
         const [roomsRes, usersRes] = await Promise.all([
           axios.get(`${url}/api/chat/rooms`, { headers }),
           axios.get(`${url}/api/chat/users`, { headers })

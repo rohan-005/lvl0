@@ -1,13 +1,25 @@
-const sanitizeUrl = (url) => (url ? url.replace(/\/$/, "") : "");
+/**
+ * API Configuration — Gateway-only architecture.
+ *
+ * The frontend communicates EXCLUSIVELY with the API Gateway.
+ * Individual service URLs (user-service, chat-service, etc.) are
+ * internal to the gateway and are NEVER sent to the browser.
+ *
+ * All axios instances and socket connections must use GATEWAY_URL.
+ */
 
-const defaultBase = sanitizeUrl(import.meta.env.VITE_BACKEND_URL) || "http://localhost:5000";
+const GATEWAY_URL =
+  (import.meta.env.VITE_API_GATEWAY_URL || 'http://localhost:4000').replace(/\/$/, '');
 
 export const API_CONFIG = {
-  USER_SERVICE_URL: sanitizeUrl(import.meta.env.VITE_USER_SERVICE_URL) || defaultBase,
-  EMAIL_SERVICE_URL: sanitizeUrl(import.meta.env.VITE_EMAIL_SERVICE_URL) || defaultBase,
-  NEWS_GAME_SERVICE_URL: sanitizeUrl(import.meta.env.VITE_NEWS_GAME_SERVICE_URL) || defaultBase,
-  CHAT_SERVICE_URL: sanitizeUrl(import.meta.env.VITE_CHAT_SERVICE_URL) || defaultBase,
-  BASE_URL: defaultBase,
+  /** Base URL for all HTTP API calls → goes through the gateway */
+  GATEWAY_URL,
+
+  /** Base URL for axios instances pointing to the REST API */
+  API_BASE_URL: `${GATEWAY_URL}/api`,
+
+  /** Socket.IO connection URL → gateway proxies WS upgrades to chat-service */
+  SOCKET_URL: GATEWAY_URL,
 };
 
 export default API_CONFIG;
