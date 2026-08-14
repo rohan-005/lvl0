@@ -4,14 +4,7 @@
  * Proxy factory module.
  *
  * Uses http-proxy-middleware to forward requests to internal services.
- * Headers (Authorization, Content-Type, etc.), request bodies, query
- * parameters and HTTP methods are all forwarded transparently.
- *
- * Multipart/form-data (file uploads) work because http-proxy-middleware
- * streams the raw request — it does NOT parse/consume the body first.
- *
- * NOTE: Do NOT add express.json() / express.urlencoded() before these
- * proxies, or the body stream will be consumed before proxying.
+ * Uses `pathFilter` so Express does NOT strip the prefix when proxying.
  */
 
 const { createProxyMiddleware } = require('http-proxy-middleware');
@@ -23,7 +16,6 @@ function onError(err, req, res) {
   const target = res.req?.path || req.url;
   console.error(`[gateway] Proxy error for ${target}: ${err.message}`);
 
-  // res may already have been used if the upstream sent a partial response
   if (res.headersSent) return;
 
   res.status(503).json({
@@ -36,16 +28,13 @@ function onError(err, req, res) {
  * Build a proxy middleware for the User Service.
  * Routes: /api/auth/*, /api/otp/*
  */
-function buildUserProxy(pathPrefix) {
+function buildUserProxy(pathFilter = ['/api/auth', '/api/otp']) {
   const target = process.env.USER_SERVICE_URL;
   return createProxyMiddleware({
     target,
     changeOrigin: true,
-    // Preserve the full path — the service expects /api/auth/…
-    pathRewrite: undefined,
+    pathFilter,
     on: { error: onError },
-    // Forward the raw Authorization header so JWT auth works unchanged
-    headers: {},
   });
 }
 
@@ -53,51 +42,43 @@ function buildUserProxy(pathPrefix) {
  * Build a proxy middleware for the News/Game Service.
  * Routes: /api/news/*, /api/games/*
  */
-function buildNewsGameProxy(pathPrefix) {
+function buildNewsGameProxy(pathFilter = ['/api/news', '/api/games']) {
   const target = process.env.NEWS_GAME_SERVICE_URL;
   return createProxyMiddleware({
     target,
     changeOrigin: true,
-    pathRewrite: undefined,
+    pathFilter,
     on: { error: onError },
   });
 }
 
 /**
  * Build a proxy middleware for the Chat Room Service (HTTP).
- * Routes: /api/chat/*, /uploads/*
+ * Routes: /api/chat/*, /uploads/*, /socket.io/*
  */
-function buildChatProxy(pathPrefix) {
+function buildChatProxy(pathFilter = ['/api/chat', '/uploads', '/socket.io']) {
   const target = process.env.CHAT_SERVICE_URL;
   return createProxyMiddleware({
     target,
     changeOrigin: true,
-    pathRewrite: undefined,
+    pathFilter,
     on: { error: onError },
   });
 }
 
 /**
  * Build a WebSocket proxy for Socket.IO traffic.
- * Used by the HTTP server's 'upgrade' event handler.
- *
- * Socket.IO connections arrive as:
- *   GET /socket.io/?EIO=4&transport=websocket  (upgrade)
- *   GET /socket.io/?EIO=4&transport=polling    (HTTP long-poll fallback)
- *
- * We proxy both /socket.io/* to the Chat Service.
  */
 function buildChatWsProxy() {
   const target = process.env.CHAT_SERVICE_URL;
   return createProxyMiddleware({
     target,
     changeOrigin: true,
-    ws: true,            // Enable WebSocket proxying
-    pathRewrite: undefined,
+    ws: true,
+    pathFilter: ['/socket.io'],
     on: {
       error: (err, req, res) => {
         console.error(`[gateway] WS proxy error: ${err.message}`);
-        // For WebSocket upgrade failures, the socket may already be destroyed
         if (res && !res.headersSent) {
           res.status(503).json({ error: 'WebSocket service unavailable' });
         }

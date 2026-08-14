@@ -66,23 +66,18 @@ app.get('/health', (_req, res) => {
 
 // ─── Proxy Routes ─────────────────────────────────────────────────────────────
 //
+// Mounted without path prefix in app.use so pathFilter preserves full URL:
 // /api/auth/*  → user-service
-// /api/otp/*   → user-service  (OTP routes live on auth service)
+// /api/otp/*   → user-service
 // /api/news/*  → news-game-service
 // /api/games/* → news-game-service
 // /api/chat/*  → chat-room-service
-// /socket.io/* → chat-room-service  (WebSocket upgrade)
-// /uploads/*   → chat-room-service  (static files)
+// /uploads/*   → chat-room-service
+// /socket.io/* → chat-room-service
 
-app.use('/api/auth', buildUserProxy('/api/auth'));
-app.use('/api/otp', buildUserProxy('/api/otp'));
-app.use('/api/news', buildNewsGameProxy('/api/news'));
-app.use('/api/games', buildNewsGameProxy('/api/games'));
-app.use('/api/chat', buildChatProxy('/api/chat'));
-app.use('/uploads', buildChatProxy('/uploads'));
-
-// Socket.IO HTTP long-poll fallback — must be proxied as well as WS upgrades
-app.use('/socket.io', buildChatProxy('/socket.io'));
+app.use(buildUserProxy(['/api/auth', '/api/otp']));
+app.use(buildNewsGameProxy(['/api/news', '/api/games']));
+app.use(buildChatProxy(['/api/chat', '/uploads', '/socket.io']));
 
 // ─── Gateway-level 404 ───────────────────────────────────────────────────────
 app.use((_req, res) => {
