@@ -39,6 +39,20 @@ function buildUserProxy(pathFilter = ['/api/auth', '/api/otp']) {
 }
 
 /**
+ * Build a proxy middleware for the Email Service.
+ * Routes: /api/email/*
+ */
+function buildEmailProxy(pathFilter = ['/api/email']) {
+  const target = process.env.EMAIL_SERVICE_URL;
+  return createProxyMiddleware({
+    target,
+    changeOrigin: true,
+    pathFilter,
+    on: { error: onError },
+  });
+}
+
+/**
  * Build a proxy middleware for the News/Game Service.
  * Routes: /api/news/*, /api/games/*
  */
@@ -89,6 +103,7 @@ function buildChatWsProxy() {
 
 module.exports = {
   buildUserProxy,
+  buildEmailProxy,
   buildNewsGameProxy,
   buildChatProxy,
   buildChatWsProxy,

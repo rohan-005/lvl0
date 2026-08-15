@@ -7,10 +7,10 @@ const morgan = require('morgan');
 const { v4: uuidv4 } = require('uuid');
 const rateLimit = require('express-rate-limit');
 
-const { buildUserProxy, buildNewsGameProxy, buildChatProxy, buildChatWsProxy } = require('./proxy');
+const { buildUserProxy, buildEmailProxy, buildNewsGameProxy, buildChatProxy, buildChatWsProxy } = require('./proxy');
 
 // ─── Validate required env ───────────────────────────────────────────────────
-const REQUIRED_ENV = ['USER_SERVICE_URL', 'NEWS_GAME_SERVICE_URL', 'CHAT_SERVICE_URL'];
+const REQUIRED_ENV = ['USER_SERVICE_URL', 'EMAIL_SERVICE_URL', 'NEWS_GAME_SERVICE_URL', 'CHAT_SERVICE_URL'];
 for (const key of REQUIRED_ENV) {
   if (!process.env[key]) {
     console.error(`[gateway] FATAL: Missing required env var: ${key}`);
@@ -58,6 +58,7 @@ app.get('/health', (_req, res) => {
     timestamp: new Date().toISOString(),
     services: {
       user: process.env.USER_SERVICE_URL,
+      email: process.env.EMAIL_SERVICE_URL,
       news_game: process.env.NEWS_GAME_SERVICE_URL,
       chat: process.env.CHAT_SERVICE_URL,
     },
@@ -66,9 +67,9 @@ app.get('/health', (_req, res) => {
 
 // ─── Proxy Routes ─────────────────────────────────────────────────────────────
 //
-// Mounted without path prefix in app.use so pathFilter preserves full URL:
 // /api/auth/*  → user-service
 // /api/otp/*   → user-service
+// /api/email/* → email-service
 // /api/news/*  → news-game-service
 // /api/games/* → news-game-service
 // /api/chat/*  → chat-room-service
@@ -76,6 +77,7 @@ app.get('/health', (_req, res) => {
 // /socket.io/* → chat-room-service
 
 app.use(buildUserProxy(['/api/auth', '/api/otp']));
+app.use(buildEmailProxy(['/api/email']));
 app.use(buildNewsGameProxy(['/api/news', '/api/games']));
 app.use(buildChatProxy(['/api/chat', '/uploads', '/socket.io']));
 
@@ -105,6 +107,7 @@ httpServer.on('upgrade', (req, socket, head) => {
 httpServer.listen(PORT, () => {
   console.log(`\n🚀 API Gateway running on port ${PORT}`);
   console.log(`   → USER_SERVICE_URL  : ${process.env.USER_SERVICE_URL}`);
+  console.log(`   → EMAIL_SERVICE_URL : ${process.env.EMAIL_SERVICE_URL}`);
   console.log(`   → NEWS_GAME_SERVICE : ${process.env.NEWS_GAME_SERVICE_URL}`);
   console.log(`   → CHAT_SERVICE_URL  : ${process.env.CHAT_SERVICE_URL}`);
   console.log(`   → CLIENT_URL (CORS) : ${CLIENT_URL}\n`);
