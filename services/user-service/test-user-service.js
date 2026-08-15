@@ -21,7 +21,7 @@ function request(url, options = {}) {
       path: urlObj.pathname + urlObj.search,
       method: options.method || 'GET',
       headers,
-      timeout: 5000,
+      timeout: 10000,
     };
 
     const req = http.request(reqOptions, (res) => {
