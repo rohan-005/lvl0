@@ -1,203 +1,739 @@
-/* ================================
-   FONTS
-================================ */
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@600;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@600;800;900&display=swap");
 
-/* ================================
-   RESET
-================================ */
-* {
+/* ════════════════════════════════════════════════════════════
+   LVL0 REDESIGNED LANDING PAGE — v4 (FULL WIDTH & CINEMATIC)
+   Palette:
+     Bg Main:        #EFE7DA (Warm Parchment)
+     Surface/Card:   #F5EFE6 (Cream Surface)
+     Primary Dark:   #2B211C (Espresso Dark)
+     Accent Red:     #A83D32 (Dark Muted Red)
+     Dark Red:       #7F2E27
+     Border:         #6A5548 & #2B211C (Sharp Dark Lines)
+════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-/* ================================
-   ROOT
-================================ */
-.landing-root {
-  width: 100vw;
-  height: 100vh;
-  background: radial-gradient(circle at center right, rgba(142, 8, 59, 0.7), rgba(74, 1, 19, 0.3), var(--bg-dark));
-  color: white;
-  position: relative;
-  overflow: hidden;
+.landing-page-root {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-main);
   font-family: "Space Grotesk", sans-serif;
+  overflow-x: hidden;
 }
 
-/* ================================
-   LOGO
-================================ */
-.lvl0-logo-home {
+/* ════════════════════════════════════════════════════════════
+   1. NAVIGATION BAR
+════════════════════════════════════════════════════════════ */
+.landing-nav {
   position: absolute;
-  top: 32px;
-  left: 48px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: rgba(43, 33, 28, 0.85);
+  border-bottom: 2px solid var(--border-main);
+  backdrop-filter: blur(10px);
+}
+
+.landing-nav-inner {
+  max-width: 1320px;
+  width: 92%;
+  margin: 0 auto;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.landing-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.brand-logo-text {
   font-family: "Orbitron", sans-serif;
-  font-size: clamp(2.5rem, 5vw, 5rem);
-  font-weight: 800;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #F5EFE6;
+  letter-spacing: 1px;
+}
+.brand-underscore {
   color: var(--accent);
-  z-index: 10;
 }
 
-.underscore {
-  font-size: 0.5em;
-  position: relative;
-  top: -0.2em;
-}
-
-/* ================================
-   HERO SECTION
-================================ */
-.hero {
-  position: absolute;
-  top: 30%;
-  left: 60px;
-  max-width: 600px;
-  z-index: 5;
-}
-
-.hero h1 {
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
-  line-height: 1.2;
-  font-weight: 700;
-}
-
-.hero-sub {
-  color: #b5b5b5;
-  margin: 20px 0;
+.brand-tag {
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.9rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: var(--accent);
+  color: #F5EFE6;
+  padding: 2px 6px;
+  letter-spacing: 1px;
 }
 
-/* ================================
-   BUTTONS
-================================ */
-.auth-buttons {
+.landing-nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-link-item {
+  background: none;
+  border: none;
+  color: #E2D7BE;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.nav-link-item:hover {
+  color: var(--accent);
+}
+
+.landing-nav-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-btn-guest {
+  background: transparent !important;
+  color: #F5EFE6 !important;
+  border: 1.5px solid var(--border-subtle) !important;
+  box-shadow: none !important;
+  padding: 8px 14px !important;
+  font-size: 0.78rem !important;
+}
+.nav-btn-guest:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+.nav-btn-login {
+  background: var(--bg-card) !important;
+  color: var(--text-dark) !important;
+  padding: 8px 16px !important;
+  font-size: 0.78rem !important;
+}
+
+.nav-btn-register {
+  background: var(--accent) !important;
+  color: #F5EFE6 !important;
+  padding: 8px 16px !important;
+  font-size: 0.78rem !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   2. FULL-SCREEN HERO SECTION (100vw, 100vh)
+════════════════════════════════════════════════════════════ */
+.landing-hero-fullwidth {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 30%, #3A2922 0%, #2B211C 100%);
+  color: #F5EFE6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 4px solid var(--border-main);
+  overflow: hidden;
+  padding-top: 70px;
+}
+
+.landing-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1050px;
+  width: 90%;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+}
+
+.landing-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(168, 61, 50, 0.22);
+  border: 1.5px solid var(--border-accent);
+  padding: 6px 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  color: #F5EFE6;
+  text-transform: uppercase;
+}
+
+.badge-pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent);
+  animation: pulse-dot 1.5s infinite;
+}
+
+.landing-hero-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  color: #F5EFE6;
+  text-shadow: 3px 3px 0px #2B211C, 0 0 24px rgba(168, 61, 50, 0.35);
+}
+
+.landing-hero-sub {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: #E2D7BE;
+  max-width: 680px;
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+.landing-hero-ctas {
   display: flex;
   gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
 }
 
-/* ================================
-   INFO STRIP
-================================ */
-.info-strip {
-  position: absolute;
-  bottom: 30px;
-  left: 60px;
+.hero-cta-main {
+  background-color: var(--accent) !important;
+  color: #F5EFE6 !important;
+  padding: 14px 34px !important;
+  font-size: 0.95rem !important;
+}
+
+.hero-cta-sec {
+  background-color: var(--bg-card) !important;
+  color: var(--text-dark) !important;
+  padding: 14px 34px !important;
+  font-size: 0.95rem !important;
+}
+
+.landing-hero-stats-bar {
   display: flex;
-  gap: 20px;
-  font-size: 0.75rem;
-  color: #888;
-  font-family: "JetBrains Mono", monospace;
-}
-
-/* ================================
-   CARDS LAYER
-================================ */
-.cards-layer {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-/* scattered positioning wrapper */
-.card-wrapper {
-  position: absolute;
-}
-
-/* ================================
-   CARD DESIGN (SMALL + CLEAN)
-================================ */
-.text-card {
-  width: 400px;
-  min-height: 200px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 16px;
-  padding: 14px;
+  align-items: center;
+  gap: 28px;
+  margin-top: 24px;
+  background: rgba(43, 33, 28, 0.65);
+  border: 1px solid var(--border-subtle);
+  padding: 14px 32px;
   backdrop-filter: blur(8px);
-  border: 1px solid;
-  transition: all 0.25s ease;
 }
 
-.text-card:hover {
-  transform: translateY(-6px) scale(1.03);
+.landing-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.65rem;
+  color: #E2D7BE;
+  letter-spacing: 1px;
+}
+
+.stat-sep {
+  width: 1px;
+  height: 28px;
+  background-color: var(--border-subtle);
+}
+
+/* ════════════════════════════════════════════════════════════
+   FULL-WIDTH SECTIONS
+════════════════════════════════════════════════════════════ */
+.landing-fullwidth-section {
+  width: 100%;
+  padding: 80px 0;
+  border-bottom: 2px solid var(--border-main);
+}
+
+.sec-cream {
+  background-color: var(--bg-cream);
+}
+.sec-parchment {
+  background-color: var(--bg-main);
+}
+.sec-dark-banner {
+  background: linear-gradient(135deg, #3A2922 0%, #2B211C 100%);
+  color: #F5EFE6;
+  border-bottom: 4px solid var(--border-main);
+}
+
+.landing-section-container {
+  max-width: 1320px;
+  width: 92%;
+  margin: 0 auto;
+}
+
+.section-title-block {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 48px;
+}
+
+.section-kicker {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+
+.section-heading {
+  font-family: "Orbitron", sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--text-main);
+}
+
+/* PILLARS GRID */
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+}
+
+.pillar-card {
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.pillar-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 6px 6px 0px var(--border-main);
   border-color: var(--accent);
 }
 
-/* ================================
-   CARD CONTENT
-================================ */
-.text-card h3 {
-  font-size: 2.5rem;
-  margin-bottom: 4px;
-  font-weight: 600;
-  font-style: italic;
-}
-
-.card-desc {
-  font-size: 1.5rem;
-  color: rgb(211, 207, 207);
-  margin-bottom: 6px;
-}
-
-/* bullet points */
-.card-points {
-  list-style: none;
-  padding: 0;
-}
-
-.card-points li {
-  font-size: 1.1rem;
-  color: #ffffff;
-  position: relative;
-  padding-left: 10px;
-  margin-bottom: 2px;
-}
-
-.card-points li::before {
-  content: "•";
-  position: absolute;
-  left: 0;
+.pillar-num {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
   color: var(--accent);
 }
 
-/* ================================
-   MOBILE RESPONSIVE
-================================ */
+.pillar-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.pillar-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  flex: 1;
+}
+
+.pillar-link {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: color 0.15s ease;
+}
+.pillar-link:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+/* GAMES GRID PREVIEW */
+.section-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.btn-outline-sm {
+  background: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  padding: 8px 16px !important;
+  font-size: 0.78rem !important;
+}
+
+.landing-games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.landing-game-card {
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.landing-game-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 6px 6px 0px var(--border-main);
+  border-color: var(--accent);
+}
+
+.game-img-holder {
+  position: relative;
+  width: 100%;
+  height: 170px;
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-main);
+  overflow: hidden;
+}
+.game-img-holder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.landing-game-card:hover .game-img-holder img {
+  transform: scale(1.05);
+}
+
+.no-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.game-rating-tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--border-main);
+  color: #F5EFE6;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 7px;
+}
+
+.game-card-details {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.game-card-details h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.game-card-sub {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.flex-justify {
+  display: flex;
+  justify-content: space-between;
+}
+.accent-text {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.game-skeleton-box {
+  height: 240px;
+  animation: hp-pulse 1.4s infinite;
+}
+
+/* DUAL PREVIEW GRID */
+.dual-preview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.dual-preview-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card-top-bar {
+  padding: 16px 20px;
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-main);
+}
+.card-kicker {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1.5px;
+  display: block;
+}
+.card-top-bar h3 {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.news-preview-list,
+.comm-preview-list {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.news-preview-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-main);
+}
+.news-bullet-icon {
+  color: var(--accent);
+}
+.news-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.news-row-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.35;
+  transition: color 0.15s ease;
+}
+.news-preview-row:hover .news-row-title {
+  color: var(--accent);
+}
+.news-row-src {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.comm-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-main);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.comm-row:hover {
+  border-color: var(--border-main);
+  background: var(--bg-secondary);
+  transform: translateX(3px);
+}
+
+.comm-hash {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+.comm-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.comm-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+.comm-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.comm-tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.65rem;
+  border: 1px solid var(--border-subtle);
+  padding: 2px 6px;
+}
+
+.card-bottom-bar {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+}
+
+/* BANNER */
+.banner-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 680px;
+}
+
+.banner-kicker {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+
+.banner-text h2 {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #F5EFE6;
+}
+
+.banner-text p {
+  font-size: 1rem;
+  color: #E2D7BE;
+  line-height: 1.5;
+}
+
+.banner-ctas {
+  display: flex;
+  gap: 12px;
+}
+.banner-btn-main {
+  background: var(--accent) !important;
+  color: #F5EFE6 !important;
+  padding: 14px 28px !important;
+  font-size: 0.88rem !important;
+}
+.banner-btn-sec {
+  background: var(--bg-card) !important;
+  color: var(--text-dark) !important;
+  padding: 14px 28px !important;
+  font-size: 0.88rem !important;
+}
+
+/* FOOTER */
+.landing-footer {
+  width: 100%;
+  background: var(--border-main);
+  color: #E2D7BE;
+  padding: 40px 0 24px;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer-logo {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #F5EFE6;
+}
+
+.footer-tagline {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  color: var(--border-subtle);
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+.footer-links a {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+  color: #E2D7BE;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.footer-links a:hover {
+  color: var(--accent);
+}
+
+.footer-copy {
+  text-align: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  color: #8C7768;
+  margin-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 16px;
+}
+
+/* RESPONSIVE */
 @media (max-width: 900px) {
-  html,
-  body {
-    overflow-x: hidden;
+  .landing-nav-links {
+    display: none;
   }
-
-  .landing-root {
-    height: auto;
-    overflow: visible;
+  .dual-preview-grid {
+    grid-template-columns: 1fr;
   }
+}
 
-  .hero {
-    position: relative;
-    top: auto;
-    left: auto;
-    padding: 120px 24px 40px;
+@media (max-width: 600px) {
+  .landing-hero-ctas {
+    flex-direction: column;
+    width: 100%;
   }
-
-  .info-strip {
-    position: relative;
-    left: auto;
-    bottom: auto;
-    padding: 0 24px;
-    margin-top: 20px;
-    flex-wrap: wrap;
+  .landing-hero-stats-bar {
+    flex-direction: column;
+    gap: 12px;
   }
-
-  .cards-layer {
-    position: relative;
-    padding: 20px;
+  .stat-sep {
+    width: 60px;
+    height: 1px;
   }
-
-  .card-wrapper {
-    position: relative;
-    margin-bottom: 20px;
+  .banner-ctas {
+    flex-direction: column;
+    width: 100%;
   }
 }
