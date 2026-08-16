@@ -10,18 +10,49 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 /**
- * Service-unavailable handler — returns a clean 503 instead of crashing.
+ * Structured error logger helper for the API Gateway.
  */
-function onError(err, req, res) {
-  const target = res.req?.path || req.url;
-  console.error(`[gateway] Proxy error for ${target}: ${err.message}`);
+function logProxyError(type, path, message) {
+  process.stderr.write(`[gateway] ${type} proxy error for ${path}: ${message}\n`);
+}
 
-  if (res.headersSent) return;
+/**
+ * HTTP Proxy error handler.
+ * Safely returns a 503 JSON response when an Express HTTP response object is available.
+ */
+function onHttpError(err, req, res) {
+  const target = req?.originalUrl || req?.url || 'unknown';
+  logProxyError('HTTP', target, err.message);
 
-  res.status(503).json({
-    error: 'Service unavailable',
-    message: 'The upstream service is currently unreachable. Please try again later.',
-  });
+  if (res && typeof res.status === 'function') {
+    if (!res.headersSent) {
+      return res.status(503).json({
+        error: 'Service unavailable',
+        message: 'The upstream service is currently unreachable. Please try again later.',
+      });
+    }
+  }
+}
+
+/**
+ * WebSocket Proxy error handler.
+ * Handles errors on WebSocket upgrade/stream connections (where 3rd arg is a net.Socket, NOT res).
+ * MUST NOT call Express response methods like res.status() or res.json().
+ */
+function onWsError(err, req, socket) {
+  const target = req?.url || 'socket.io';
+  logProxyError('WS', target, err.message);
+
+  if (socket && typeof socket.destroy === 'function') {
+    if (socket.writable && !socket.destroyed) {
+      try {
+        socket.write('HTTP/1.1 503 Service Unavailable\r\nConnection: close\r\n\r\n');
+      } catch (_) {
+        // Ignore socket write errors during failure teardown
+      }
+    }
+    socket.destroy();
+  }
 }
 
 /**
@@ -34,7 +65,7 @@ function buildUserProxy(pathFilter = ['/api/auth', '/api/otp']) {
     target,
     changeOrigin: true,
     pathFilter,
-    on: { error: onError },
+    on: { error: onHttpError },
   });
 }
 
@@ -48,7 +79,7 @@ function buildEmailProxy(pathFilter = ['/api/email']) {
     target,
     changeOrigin: true,
     pathFilter,
-    on: { error: onError },
+    on: { error: onHttpError },
   });
 }
 
@@ -62,7 +93,7 @@ function buildNewsGameProxy(pathFilter = ['/api/news', '/api/games']) {
     target,
     changeOrigin: true,
     pathFilter,
-    on: { error: onError },
+    on: { error: onHttpError },
   });
 }
 
@@ -76,7 +107,7 @@ function buildChatProxy(pathFilter = ['/api/chat', '/uploads', '/socket.io']) {
     target,
     changeOrigin: true,
     pathFilter,
-    on: { error: onError },
+    on: { error: onHttpError },
   });
 }
 
@@ -91,12 +122,7 @@ function buildChatWsProxy() {
     ws: true,
     pathFilter: ['/socket.io'],
     on: {
-      error: (err, req, res) => {
-        console.error(`[gateway] WS proxy error: ${err.message}`);
-        if (res && !res.headersSent) {
-          res.status(503).json({ error: 'WebSocket service unavailable' });
-        }
-      },
+      error: onWsError,
     },
   });
 }
@@ -107,4 +133,7 @@ module.exports = {
   buildNewsGameProxy,
   buildChatProxy,
   buildChatWsProxy,
+  onHttpError,
+  onWsError,
 };
+

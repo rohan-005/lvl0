@@ -26,6 +26,10 @@ export const SocketProvider = ({ children }) => {
         reconnectionAttempts: 10
       });
 
+      newSocket.on("connect_error", (_err) => {
+        // Socket.IO connection failed — gateway handles failure without crashing
+      });
+
       setSocket(newSocket);
 
       return () => {

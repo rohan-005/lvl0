@@ -100,8 +100,16 @@ const httpServer = createServer(app);
 // Attach WebSocket proxy for Socket.IO traffic
 const chatWsProxy = buildChatWsProxy();
 httpServer.on('upgrade', (req, socket, head) => {
-  console.log(`[gateway] WS upgrade: ${req.url}`);
-  chatWsProxy.upgrade(req, socket, head);
+  if (req.url && req.url.startsWith('/socket.io')) {
+    socket.on('error', () => {
+      if (socket && typeof socket.destroy === 'function' && !socket.destroyed) {
+        socket.destroy();
+      }
+    });
+    chatWsProxy.upgrade(req, socket, head);
+  } else {
+    socket.destroy();
+  }
 });
 
 httpServer.listen(PORT, () => {

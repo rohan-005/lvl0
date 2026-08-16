@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 import { API_CONFIG } from "../../config/apiConfig";
 import { useSocket } from "../../context/SocketContext";
 import { useAuth } from "../../context/AuthContext";
@@ -49,7 +50,7 @@ const Communities = () => {
         setRooms(roomsRes.data);
         setDirectoryUsers(usersRes.data);
       } catch (err) {
-        console.error("Failed to fetch chat data", err);
+        toast.error("Chat service is temporarily unavailable.");
       }
     };
     fetchRooms();

@@ -23,10 +23,13 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
   const fileInputRef = useRef(null);
   const isInitialLoad = useRef(true);
 
+  const [chatUnavailable, setChatUnavailable] = useState(false);
+
   // Fetch initial history
   useEffect(() => {
     const fetchHistory = async () => {
       setLoading(true);
+      setChatUnavailable(false);
       try {
         const token = localStorage.getItem("token");
         const url = API_CONFIG.GATEWAY_URL;
@@ -39,7 +42,7 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
         // Use timeout to ensure DOM is rendered before scrolling
         setTimeout(() => scrollToBottom(true), 100);
       } catch (err) {
-        console.error("Failed to fetch chat history", err);
+        setChatUnavailable(true);
       } finally {
         setLoading(false);
       }
@@ -207,6 +210,12 @@ const ChatArea = ({ roomId, channel, dmUser }) => {
           <span className="pin-icon">📌</span>
           <p>{pinned[0].message}</p>
           {pinned.length > 1 && <span>(+{pinned.length - 1} more)</span>}
+        </div>
+      )}
+
+      {chatUnavailable && (
+        <div style={{ padding: "12px 16px", background: "#FFF3CD", color: "#856404", borderBottom: "2px solid #2B1704", fontWeight: "600", fontSize: "13px", textAlign: "center" }}>
+          ⚠️ Chat service is temporarily unavailable. Other services remain functional.
         </div>
       )}
 
