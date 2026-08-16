@@ -70,7 +70,7 @@
   gap: 4px;
   padding: 10px 6px;
   width: 100%;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .app-nav-item {
@@ -127,15 +127,47 @@
   pointer-events: auto;
 }
 
-/* ── Page body offset ── */
+/* Bottom Action Area (Separated Logout / Login) */
+.app-sidebar-bottom {
+  width: 100%;
+  padding: 10px 6px;
+  border-top: 2px solid var(--border-main);
+  background: var(--bg-secondary);
+}
+
+.app-logout-item {
+  color: var(--danger, #A83D32);
+}
+.app-logout-item:hover {
+  background: var(--accent-dim);
+  color: var(--accent-dark);
+  border-color: var(--accent);
+}
+.logout-icon-color {
+  color: var(--accent);
+}
+
+.app-login-item {
+  color: var(--text-main);
+}
+.app-login-item:hover {
+  background: var(--bg-hover);
+  color: var(--accent);
+  border-color: var(--border-main);
+}
+
+/* ── Page body offset — Expanding to remaining viewport ── */
 .app-page-body {
   margin-left: 70px;
   min-height: 100vh;
+  width: calc(100% - 70px);
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 @media (max-width: 560px) {
   .app-sidebar { width: 60px; }
-  .app-page-body { margin-left: 60px; }
+  .app-page-body { margin-left: 60px; width: calc(100% - 60px); }
   .app-logo-text {
     font-size: 0.7rem;
   }
