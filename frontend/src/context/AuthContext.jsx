@@ -28,13 +28,23 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
+    const isGuestSession = localStorage.getItem("isGuest");
 
     if (token && storedUser) {
       setUser(JSON.parse(storedUser));
+    } else if (isGuestSession === "true") {
+      setUser({ isGuest: true, role: "guest", name: "Guest Explorer", accountType: "guest" });
     }
 
     setLoading(false);
   }, []);
+
+  const loginAsGuest = () => {
+    const guestUser = { isGuest: true, role: "guest", name: "Guest Explorer", accountType: "guest" };
+    localStorage.setItem("isGuest", "true");
+    setUser(guestUser);
+    return guestUser;
+  };
 
   /* =========================
      LOGIN
@@ -44,6 +54,7 @@ export const AuthProvider = ({ children }) => {
       const res = await api.post("/auth/login", { email, password });
       const { token, user } = res.data;
 
+      localStorage.removeItem("isGuest");
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("accountType", user.accountType);
@@ -150,10 +161,14 @@ export const AuthProvider = ({ children }) => {
   /* =========================
      CONTEXT VALUE
      ========================= */
+  const isGuest = !user || user.role === "guest" || user.isGuest === true;
+
   const value = {
     user,
+    isGuest,
     loading,
     login,
+    loginAsGuest,
     register,
     logout,
     updateUser,

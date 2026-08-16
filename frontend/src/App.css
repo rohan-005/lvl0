@@ -12,52 +12,52 @@
    ============================================================ */
 
 :root {
-  /* — Core Brand Palette — */
-  --bg-main:         #FDFBF7;
-  --bg-cream:        #FAF6EE;
-  --bg-beige:        #F3EBE1;
-  --bg-card:         #FFFFFF;
-  --bg-secondary:    #F5EFEB;
-  --bg-hover:        #EFE6DD;
-  --bg-dark-accent:  #3D241D;
+  /* — Core Palette (Darker Light Theme) — */
+  --bg-main:         #EFE7DA;
+  --bg-cream:        #F5EFE6;
+  --bg-beige:        #E8DFC8;
+  --bg-card:         #F5EFE6;
+  --bg-secondary:    #E8DFC8;
+  --bg-hover:        #E2D7BE;
+  --bg-dark-accent:  #3A2922;
 
   /* — Sharp Borders & Lines — */
-  --border:          #2B1704;
-  --border-main:     #2B1704;
-  --border-subtle:   #D4C4B5;
-  --border-accent:   #C82333;
+  --border:          #6A5548;
+  --border-main:     #2B211C;
+  --border-subtle:   #8C7768;
+  --border-accent:   #A83D32;
 
-  /* — Typography (Dark Brown Text) — */
-  --text-main:       #2B1704;
-  --text-dark:       #1C0F02;
-  --text-muted:      #5E4636;
-  --text-dim:        #8C6D58;
-  --text-light:      #FDFBF7;
-  --text-on-accent:  #FFFFFF;
+  /* — Typography — */
+  --text-main:       #2A211D;
+  --text-dark:       #2B211C;
+  --text-muted:      #75665B;
+  --text-dim:        #6E5F54;
+  --text-light:      #F5EFE6;
+  --text-on-accent:  #F5EFE6;
 
   /* — Accents — */
-  --accent:          #C82333;
-  --accent-dark:     #A01B28;
-  --accent-shade:    #4A2E2B;
-  --accent-brown:    #4A2E2B;
-  --accent-cream:    #F5EFEB;
-  --accent-dim:      rgba(200, 35, 51, 0.10);
-  --accent-glow:     rgba(200, 35, 51, 0.20);
-  --accent-soft:     #E8DDD0;
-  --bg-dark:         #2B1704;
-  --bg-glass:        rgba(253, 251, 247, 0.95);
-  --bg-input:        #FFFFFF;
+  --accent:          #A83D32;
+  --accent-dark:     #7F2E27;
+  --accent-shade:    #3A2922;
+  --accent-brown:    #3A2922;
+  --accent-cream:    #F5EFE6;
+  --accent-dim:      rgba(168, 61, 50, 0.12);
+  --accent-glow:     rgba(168, 61, 50, 0.22);
+  --accent-soft:     #E8DFC8;
+  --bg-dark:         #2B211C;
+  --bg-glass:        rgba(245, 239, 230, 0.95);
+  --bg-input:        #F5EFE6;
 
   /* — Status Colors — */
-  --danger:          #D9383A;
-  --success:         #2E7D32;
-  --warning:         #D97706;
+  --danger:          #A83D32;
+  --success:         #3A7D44;
+  --warning:         #C67B25;
 }
 
 body {
   background-color: var(--bg-main);
   color: var(--text-main);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -66,6 +66,30 @@ body {
 .sharp-card {
   background-color: var(--bg-card);
   border: 2px solid var(--border-main);
-  box-shadow: 3px 3px 0px var(--border-main);
-  border-radius: 4px;
+  box-shadow: 4px 4px 0px var(--border-main);
+  border-radius: 0px;
 }
+
+.sharp-button {
+  background-color: var(--accent);
+  color: var(--text-light);
+  border: 2px solid var(--border-main);
+  box-shadow: 3px 3px 0px var(--border-main);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-radius: 0px;
+}
+.sharp-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--border-main);
+  background-color: var(--accent-dark);
+}
+.sharp-button:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px var(--border-main);
+}
+
