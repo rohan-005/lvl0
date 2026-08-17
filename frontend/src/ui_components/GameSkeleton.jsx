@@ -2,42 +2,64 @@ import React from "react";
 
 export const GameCardSkeleton = () => (
   <div 
+    className="news-card game-skeleton-card"
     style={{
       backgroundColor: "var(--bg-card)",
       border: "2px solid var(--border-main)",
       boxShadow: "3px 3px 0px var(--border-main)",
-      padding: "12px",
+      padding: "0",
       display: "flex",
       flexDirection: "column",
-      gap: "10px",
+      overflow: "hidden",
       borderRadius: "0px",
+      marginBottom: "20px",
+      breakInside: "avoid"
     }}
   >
     <div 
       style={{
         width: "100%",
-        height: "160px",
+        height: "190px",
         backgroundColor: "var(--bg-secondary)",
-        border: "1px solid var(--border-subtle)",
-        animation: "hp-pulse 1.4s ease-in-out infinite",
+        borderBottom: "2px solid var(--border-main)",
+        animation: "hp-pulse 1.4s ease-in-out infinite"
       }} 
     />
-    <div 
-      style={{
-        width: "75%",
-        height: "18px",
-        backgroundColor: "var(--bg-secondary)",
-        animation: "hp-pulse 1.4s ease-in-out infinite",
-      }} 
-    />
-    <div 
-      style={{
-        width: "45%",
-        height: "14px",
-        backgroundColor: "var(--bg-secondary)",
-        animation: "hp-pulse 1.4s ease-in-out infinite",
-      }} 
-    />
+    <div style={{ padding: "14px", display: "flex", flexDirection: "column", gap: "10px" }}>
+      <div 
+        style={{
+          width: "40%",
+          height: "12px",
+          backgroundColor: "var(--bg-secondary)",
+          animation: "hp-pulse 1.4s ease-in-out infinite"
+        }} 
+      />
+      <div 
+        style={{
+          width: "80%",
+          height: "18px",
+          backgroundColor: "var(--bg-secondary)",
+          animation: "hp-pulse 1.4s ease-in-out infinite"
+        }} 
+      />
+      <div 
+        style={{
+          width: "30%",
+          height: "14px",
+          backgroundColor: "var(--bg-secondary)",
+          marginTop: "6px",
+          animation: "hp-pulse 1.4s ease-in-out infinite"
+        }} 
+      />
+    </div>
+  </div>
+);
+
+export const GameGridSkeleton = ({ count = 12 }) => (
+  <div className="news-grid">
+    {Array.from({ length: count }).map((_, i) => (
+      <GameCardSkeleton key={i} />
+    ))}
   </div>
 );
 
@@ -76,3 +98,5 @@ export const GameDetailsSkeleton = () => (
     <div style={{ width: "90%", height: "16px", backgroundColor: "var(--bg-secondary)", animation: "hp-pulse 1.4s ease-in-out infinite" }} />
   </div>
 );
+
+export default GameGridSkeleton;
