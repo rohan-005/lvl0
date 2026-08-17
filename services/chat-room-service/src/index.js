@@ -6,7 +6,7 @@ const cors = require('cors');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
-const connectDB = require('./config/connectdb');
+const { connectDB, getDBStatus } = require('./config/connectdb');
 const chatRoutes = require('./routes/chat');
 const chatHandler = require('./socket/chatHandler');
 
@@ -14,7 +14,7 @@ const app = express();
 const httpServer = createServer(app);
 const PORT = process.env.PORT || 5004;
 
-// Connect DB
+// Connect DB asynchronously with reconnection handling
 connectDB();
 
 // Setup Socket.IO
@@ -44,10 +44,13 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Health check
 app.get('/health', (_req, res) => {
-  res.json({
-    status: 'ok',
+  const dbStatus = getDBStatus();
+  const isHealthy = dbStatus === 'connected';
+  res.status(isHealthy ? 200 : 503).json({
+    status: isHealthy ? 'ok' : 'degraded',
     service: 'chat-room-service',
     port: PORT,
+    database: dbStatus,
     timestamp: new Date().toISOString(),
   });
 });
